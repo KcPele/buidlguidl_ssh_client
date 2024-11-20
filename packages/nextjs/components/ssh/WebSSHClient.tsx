@@ -144,7 +144,7 @@ const WebSSHClient = () => {
   };
 
   return (
-    <div className="min-h-screen bg-base-200 p-4">
+    <div className=" bg-base-200 p-4">
       <div className="max-w-md mx-auto">
         <div className="card bg-base-100 shadow-xl">
           <div className="card-body">

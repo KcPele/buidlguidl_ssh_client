@@ -1,5 +1,5 @@
 import React from "react";
-import WebSSHClient from "~~/components/WebSSHClient";
+import WebSSHClient from "~~/components/ssh/WebSSHClient";
 
 const Home = () => {
   return <WebSSHClient />;

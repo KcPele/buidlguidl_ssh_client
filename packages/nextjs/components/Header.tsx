@@ -1,11 +1,11 @@
 "use client";
 
-import React, { useCallback, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { Bars3Icon, BugAntIcon } from "@heroicons/react/24/outline";
-import { FaucetButton, RainbowKitCustomConnectButton } from "~~/components/scaffold-eth";
 import { useOutsideClick } from "~~/hooks/scaffold-eth";
 
 type HeaderMenuLink = {
@@ -13,12 +13,18 @@ type HeaderMenuLink = {
   href: string;
   icon?: React.ReactNode;
 };
+interface ActiveConnection {
+  username: string;
+}
 
 export const menuLinks: HeaderMenuLink[] = [
   {
     label: "Home",
     href: "/",
   },
+  { href: "/dashboard", label: "Overview" },
+  { href: "/dashboard/connection", label: "Connection" },
+  { href: "/dashboard/setup/ubuntu", label: "Setup Ubuntu Node" },
 
   {
     label: "Debug Contracts",
@@ -59,6 +65,23 @@ export const HeaderMenuLinks = () => {
 export const Header = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const burgerMenuRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
+  const [connection, setConnection] = useState<ActiveConnection | null>(null);
+
+  useEffect(() => {
+    const activeConnection = localStorage.getItem("active_ssh_connection");
+    if (!activeConnection) {
+      router.push("/");
+      return;
+    }
+    setConnection(JSON.parse(activeConnection));
+  }, [router]);
+
+  const handleDisconnect = () => {
+    localStorage.removeItem("active_ssh_connection");
+    router.push("/");
+  };
+
   useOutsideClick(
     burgerMenuRef,
     useCallback(() => setIsDrawerOpen(false), []),
@@ -102,10 +125,16 @@ export const Header = () => {
           <HeaderMenuLinks />
         </ul>
       </div>
-      <div className="navbar-end flex-grow mr-4">
-        <RainbowKitCustomConnectButton />
-        <FaucetButton />
-      </div>
+      {connection && (
+        <div className="navbar-end flex-grow mr-4">
+          <button onClick={handleDisconnect} className="text-error">
+            Disconnect
+          </button>
+          <div className="ml-4 text-sm">
+            Logged in as: <span className="font-semibold">{connection.username}</span>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

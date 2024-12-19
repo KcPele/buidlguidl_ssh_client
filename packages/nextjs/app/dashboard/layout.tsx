@@ -11,16 +11,16 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const router = useRouter();
   const [connection, setConnection] = useState<ActiveConnection | null>(null);
 
-  useEffect(() => {
-    const activeConnection = localStorage.getItem("active_ssh_connection");
-    if (!activeConnection) {
-      router.push("/");
-      return;
-    }
-    setConnection(JSON.parse(activeConnection));
-  }, [router]);
+  // useEffect(() => {
+  //   const activeConnection = localStorage.getItem("active_ssh_connection");
+  //   if (!activeConnection) {
+  //     router.push("/");
+  //     return;
+  //   }
+  //   setConnection(JSON.parse(activeConnection));
+  // }, [router]);
 
-  if (!connection) return null;
+  // if (!connection) return null;
 
   return (
     <div className="bg-base-200">

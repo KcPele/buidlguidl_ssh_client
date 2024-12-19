@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { connections } from "../../connect/route";
-import { parseLogLine } from "~~/app/api/utils";
+import { connectionManager } from "~~/app/api/lib/connectionManager";
+import { parseLogLine } from "~~/app/api/lib/utils";
 
 export async function GET(req: NextRequest) {
   try {
@@ -8,11 +8,8 @@ export async function GET(req: NextRequest) {
     if (!sessionId) {
       throw new Error("No active session");
     }
-    const conn = connections.get(sessionId);
+    const conn = await connectionManager.getConnection(sessionId);
 
-    if (!conn) {
-      throw new Error("No active connection");
-    }
     const logPath = "~/Desktop/buidlguidl-client/ethereum_clients/lighthouse/logs";
     const command = `
     tail -n 50 $(ls -t ${logPath}/lighthouse_*.log | head -n 1)

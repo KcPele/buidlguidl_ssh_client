@@ -1,23 +1,22 @@
 import { NextRequest, NextResponse } from "next/server";
-import { connectionManager } from "~~/app/api/lib/connectionManager";
+import { connectionManager } from "../../lib/connectionManager";
 
-export async function GET(req: NextRequest) {
+interface ExecuteCommandRequest {
+  command: string;
+}
+
+export async function POST(req: NextRequest) {
   try {
+    const { command } = (await req.json()) as ExecuteCommandRequest;
     const sessionId = req.cookies.get("ssh_session")?.value;
     if (!sessionId) {
       throw new Error("No active session");
     }
     const conn = await connectionManager.getConnection(sessionId);
 
-    const logPath = "~/Desktop/buidlguidl-client/ethereum_clients/reth/logs";
-    const command = `
-    tail -n 50 $(ls -t ${logPath}/reth_*.log | head -n 1)
-  `;
-
     const output = await new Promise<string>((resolve, reject) => {
-      conn.exec(command, (err, stream) => {
+      conn.exec(command, (err: any, stream: any) => {
         if (err) {
-          console.error("SSH command error:", err);
           reject(err);
           return;
         }
@@ -32,24 +31,21 @@ export async function GET(req: NextRequest) {
         });
 
         stream.on("error", (err: any) => {
-          console.error("Stream error:", err);
           reject(err);
         });
       });
     });
-    const logs = output.split("\n").filter(line => line.trim()); // Remove empty lines
 
-    return NextResponse.json({
-      logs: Array.isArray(logs) ? logs : [],
-    });
+    return NextResponse.json({ output });
   } catch (error) {
-    console.error("Log fetching error:", error);
     return NextResponse.json(
       {
-        error: "Failed to fetch logs",
+        error: "Command execution failed",
         message: error instanceof Error ? error.message : "Unknown error",
       },
-      { status: 500 },
+      {
+        status: 500,
+      },
     );
   }
 }

@@ -30,3 +30,38 @@ p {
 .btn.btn-ghost {
   @apply shadow-none;
 }
+
+.blinking-cursor {
+  display: inline-block;
+  width: 10px;
+  background-color: transparent;
+  animation: blink 1s steps(2, start) infinite;
+}
+
+@keyframes blink {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Rotating cursor */
+.rotating-cursor {
+  display: inline-block;
+  width: 10px;
+  animation: rotate 1s linear infinite;
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

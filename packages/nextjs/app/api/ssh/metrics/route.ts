@@ -1,7 +1,6 @@
 // app/api/ssh/metrics/route.ts
 import { NextRequest, NextResponse } from "next/server";
-import { connections } from "../connect/route";
-import { Stream } from "stream";
+import { connectionManager } from "../../lib/connectionManager";
 
 export async function GET(req: NextRequest) {
   try {
@@ -10,16 +9,15 @@ export async function GET(req: NextRequest) {
     if (!sessionId) {
       throw new Error("No active session");
     }
-    const conn = connections.get(sessionId);
-    if (!conn) {
-      throw new Error("No active connection");
-    }
+
+    const conn = await connectionManager.getConnection(sessionId);
+
     const [cpuOutput, memoryOutput, uptimeOutput] = await Promise.all([
       // Get CPU usage
       new Promise<string>((resolve, reject) => {
         conn.exec(
           "top -bn1 | grep 'Cpu(s)' | sed 's/.*, *\\([0-9.]*\\)%* id.*/\\1/' | awk '{print 100 - $1}'",
-          (err: any, stream: Stream) => {
+          (err, stream) => {
             if (err) {
               reject(err);
               return;
@@ -36,7 +34,7 @@ export async function GET(req: NextRequest) {
       }),
       // Get memory usage
       new Promise<string>((resolve, reject) => {
-        conn.exec("free | grep Mem | awk '{print $3/$2 * 100.0}'", (err: any, stream: Stream) => {
+        conn.exec("free | grep Mem | awk '{print $3/$2 * 100.0}'", (err, stream) => {
           if (err) {
             reject(err);
             return;
@@ -52,7 +50,7 @@ export async function GET(req: NextRequest) {
       }),
       // Get uptime
       new Promise<string>((resolve, reject) => {
-        conn.exec("cat /proc/uptime | awk '{print $1}'", (err: any, stream: Stream) => {
+        conn.exec("cat /proc/uptime | awk '{print $1}'", (err, stream) => {
           if (err) {
             reject(err);
             return;

@@ -1,38 +1,22 @@
 import { NextRequest, NextResponse } from "next/server";
-import { Client } from "ssh2";
-import { v4 as uuidv4 } from "uuid";
-
-export const connections = new Map<string, Client>();
+import { connectionManager } from "../../lib/connectionManager";
 
 export async function POST(req: NextRequest) {
   try {
     const { host, username, password, port } = await req.json();
 
-    // Validate input
     if (!host || !username || !password) {
       return NextResponse.json({ error: "Missing required connection parameters" }, { status: 400 });
     }
-    const conn = new Client();
-    const sessionId = uuidv4();
 
-    await new Promise<void>((resolve, reject) => {
-      conn
-        .on("ready", () => {
-          connections.set(sessionId, conn);
-          resolve();
-        })
-        .on("error", err => {
-          reject(err);
-        })
-        .connect({
-          host,
-          port,
-          username,
-          password,
-        });
+    const sessionId = await connectionManager.createConnection({
+      host,
+      username,
+      password,
+      port: port || 22,
+      lastAccessed: Date.now(),
     });
 
-    // Set session cookie
     const apiResponse = NextResponse.json({
       success: true,
       sessionId: sessionId,
@@ -43,6 +27,7 @@ export async function POST(req: NextRequest) {
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
       path: "/",
+      maxAge: 3600, // 1 hour
     });
 
     return apiResponse;
@@ -54,9 +39,7 @@ export async function POST(req: NextRequest) {
         error: "Connection failed",
         message: error instanceof Error ? error.message : "Unknown error",
       },
-      {
-        status: 500,
-      },
+      { status: 500 },
     );
   }
 }

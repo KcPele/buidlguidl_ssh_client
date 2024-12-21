@@ -14,6 +14,10 @@ Currently, node operators face several significant challenges:
 
 ## Solution Overview
 Our platform provides an integrated solution that includes:
+![IMG_20241221_215527_070](https://github.com/user-attachments/assets/c105f926-19b3-4ca7-bd1a-29a7175657ee)
+![IMG_20241221_215534_983](https://github.com/user-attachments/assets/8a557384-c229-49a6-963a-b4bfd603b69d)
+![IMG_20241221_215535_153](https://github.com/user-attachments/assets/8636a7ae-930b-416d-aff4-471af95738a2)
+![IMG_20241221_215534_934](https://github.com/user-attachments/assets/ec5b4493-7aa9-47a6-8ae6-3a837ac4e988)
 
 ### 1. Core Features
 - **Secure SSH Management**

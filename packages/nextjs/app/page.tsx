@@ -236,7 +236,7 @@ export default function LandingPage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <Image
               src="/mnt/data/Screenshot from 2024-12-19 16-07-48.png"
               alt="Node Manager Terminal"
@@ -251,7 +251,7 @@ export default function LandingPage() {
               height={300}
               className="rounded-lg shadow-lg"
             />
-          </div>
+          </div> */}
         </div>
       </motion.div>
 

@@ -8,8 +8,12 @@ export async function GET(req: NextRequest) {
       throw new Error("No active session");
     }
     const conn = await connectionManager.getConnection(sessionId);
-
-    const logPath = "~/Desktop/buidlguidl-client/ethereum_clients/reth/logs";
+    let directory = req.nextUrl.searchParams.get("directory");
+    if (!directory) {
+      directory = "~/buidlguidl-client";
+    }
+    console.log("directory", directory);
+    const logPath = directory + "/ethereum_clients/reth/logs";
     const command = `
     tail -n 50 $(ls -t ${logPath}/reth_*.log | head -n 1)
   `;

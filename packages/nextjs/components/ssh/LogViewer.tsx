@@ -15,6 +15,8 @@ export function LogViewer({ url, title }: { url: string; title: string }) {
   const { data, isLoading, error, isError } = useQuery({
     queryKey: ["logs", url],
     queryFn: async () => {
+      const directory = JSON.stringify(localStorage.getItem("buildguildDirectory"));
+
       const response = await fetch(url);
       if (!response.ok) {
         const errorData = await response.json();
@@ -26,6 +28,7 @@ export function LogViewer({ url, title }: { url: string; title: string }) {
     refetchInterval: 10000,
   });
   useEffect(() => {
+    console.log(error);
     if (data) {
       if (data.logs && Array.isArray(data.logs)) {
         const parsedLogs = data.logs.map((logLine: string) => {
@@ -45,7 +48,7 @@ export function LogViewer({ url, title }: { url: string; title: string }) {
   }, [data, isError, error]);
 
   const filteredLogs = logs.filter(log => (filter === "all" ? true : log.level === filter));
-
+  console.log(url);
   return (
     <div className="bg-white rounded-lg shadow-md p-6 w-full">
       <div className="flex items-center justify-between mb-4">

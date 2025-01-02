@@ -23,7 +23,7 @@ const ExistingModal = ({
     const finalDirectory = directory.trim() || "~/buidlguidl-client";
     localStorage.setItem("buildguildDirectory", finalDirectory);
     setIsDirectoryModalOpen(false);
-    router.push("/dashboard/setup/ubuntu/existing");
+    router.push("/dashboard/setup/ubuntu");
   };
 
   return (

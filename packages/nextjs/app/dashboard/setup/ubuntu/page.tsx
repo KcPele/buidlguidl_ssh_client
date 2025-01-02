@@ -61,9 +61,9 @@ const Ubuntu = () => {
           <div className="space-y-8">
             {/* Conditional Rendering */}
             {activeSection === "node-monitor" && <NodeMonitor />}
-            {activeSection === "reth-logs" && <LogViewer title="Reth Logs" url="/api/ssh/logs/reth" />}
+            {activeSection === "reth-logs" && <LogViewer title="Reth Logs" url={`/api/ssh/logs/reth`} />}
             {activeSection === "lighthouse-logs" && (
-              <LogViewer title="Lighthouse Logs" url="/api/ssh/logs/lighthouse" />
+              <LogViewer title="Lighthouse Logs" url={`/api/ssh/logs/lighthouse`} />
             )}
             {activeSection === "terminal" && <Terminal />}
           </div>

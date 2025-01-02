@@ -7,11 +7,11 @@ export async function GET(req: NextRequest) {
     if (!sessionId) {
       throw new Error("No active session");
     }
+    // Get the directory from query parameters, with a default value
+    const { searchParams } = new URL(req.url);
+    const directory = searchParams.get("directory") || "~/buidlguidl-client";
+
     const conn = await connectionManager.getConnection(sessionId);
-    let directory = req.nextUrl.searchParams.get("directory");
-    if (!directory) {
-      directory = "~/buidlguidl-client";
-    }
     console.log("directory", directory);
     const logPath = directory + "/ethereum_clients/reth/logs";
     const command = `

@@ -15,9 +15,8 @@ export function LogViewer({ url, title }: { url: string; title: string }) {
   const { data, isLoading, error, isError } = useQuery({
     queryKey: ["logs", url],
     queryFn: async () => {
-      const directory = JSON.stringify(localStorage.getItem("buildguildDirectory"));
-
-      const response = await fetch(url);
+      const directory = localStorage.getItem("buildguildDirectory") || "";
+      const response = await fetch(url + "?directory=" + directory);
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.message || "Failed to fetch metrics");

@@ -8,9 +8,12 @@ export async function GET(req: NextRequest) {
     if (!sessionId) {
       throw new Error("No active session");
     }
+    const { searchParams } = new URL(req.url);
+    const directory = searchParams.get("directory") || "~/buidlguidl-client";
+
     const conn = await connectionManager.getConnection(sessionId);
 
-    const logPath = "~/Desktop/buidlguidl-client/ethereum_clients/lighthouse/logs";
+    const logPath = directory + "/ethereum_clients/lighthouse/logs";
     const command = `
     tail -n 50 $(ls -t ${logPath}/lighthouse_*.log | head -n 1)
   `;
@@ -40,7 +43,7 @@ export async function GET(req: NextRequest) {
     });
     const logs = output.split("\n").filter(line => line.trim()); // Remove empty lines
     const parsedLogs = logs.map(line => parseLogLine(line)); //
-    console.log(parsedLogs);
+    // console.log(parsedLogs);
     return NextResponse.json({
       logs: Array.isArray(logs) ? logs : [],
       parsedLogs,

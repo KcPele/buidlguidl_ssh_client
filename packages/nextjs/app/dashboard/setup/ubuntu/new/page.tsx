@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import SetupProgress from "./SetupProgress";
 import StepIndicator from "./StepIndicator";
@@ -99,9 +99,7 @@ export default function UbuntuSetup() {
   const [currentStep, setCurrentStep] = useState<number>(-1);
   const [isRunning, setIsRunning] = useState(false);
   const [hasError, setHasError] = useState(false);
-  const [password, setPassword] = useState("");
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
-
   const groupedSteps = steps.reduce(
     (acc, step) => {
       const category = step.category || "Uncategorized";
@@ -170,7 +168,6 @@ export default function UbuntuSetup() {
   }, []);
 
   const handlePasswordSubmit = async (password: string) => {
-    setPassword(password);
     setIsPasswordModalOpen(false);
     await startSetup(password);
   };
@@ -201,28 +198,34 @@ export default function UbuntuSetup() {
 
       try {
         const result = await executeCommand(steps[i].command, "~/buidlguidl-client", address, sudoPassword);
-
         if (result.error) {
-          setSteps(prevSteps =>
-            prevSteps.map((step, index) => (index === i ? { ...step, status: "error", output: result.error } : step)),
-          );
-          saveProgress(steps, i);
+          setSteps(prevSteps => {
+            let innerStep: Step[] = prevSteps.map((step, index) =>
+              index === i ? { ...step, status: "error", output: result.error } : step,
+            );
+            saveProgress(innerStep, i);
+            return innerStep;
+          });
           setHasError(true);
           break;
         }
 
         // Update the current step as completed with its output
-        setSteps(prevSteps =>
-          prevSteps.map((step, index) =>
+        setSteps(prevSteps => {
+          let innerStep: Step[] = prevSteps.map((step, index) =>
             index === i ? { ...step, status: "completed", output: result.output } : step,
-          ),
-        );
-        saveProgress(steps, i);
-      } catch (error) {
-        setSteps(prevSteps =>
-          prevSteps.map((step, index) => (index === i ? { ...step, status: "error", output: "Command failed" } : step)),
-        );
-        saveProgress(steps, i);
+          );
+          saveProgress(innerStep, i);
+          return innerStep;
+        });
+      } catch (error: any) {
+        setSteps(prevSteps => {
+          let innerStep: Step[] = prevSteps.map((step, index) =>
+            index === i ? { ...step, status: "error", output: error.message || "Command failed" } : step,
+          );
+          saveProgress(innerStep, i);
+          return innerStep;
+        });
         setHasError(true);
         break;
       }
@@ -356,7 +359,6 @@ export default function UbuntuSetup() {
       <PasswordModal
         isOpen={isPasswordModalOpen}
         onSubmit={handlePasswordSubmit}
-        value={password}
         onClose={() => setIsPasswordModalOpen(false)}
       />
     </div>

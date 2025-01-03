@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
+import { RainbowKitCustomConnectButton } from "./scaffold-eth";
 import { Bars3Icon, BugAntIcon } from "@heroicons/react/24/outline";
 import { useOutsideClick } from "~~/hooks/scaffold-eth";
 
@@ -125,16 +126,9 @@ export const Header = () => {
           <HeaderMenuLinks />
         </ul>
       </div>
-      {connection && (
-        <div className="navbar-end flex-grow mr-4">
-          <button onClick={handleDisconnect} className="text-error">
-            Disconnect
-          </button>
-          <div className="ml-4 text-sm">
-            Logged in as: <span className="font-semibold">{connection.username}</span>
-          </div>
-        </div>
-      )}
+      <div className="navbar-end flex-grow mr-4">
+        <RainbowKitCustomConnectButton />
+      </div>
     </div>
   );
 };

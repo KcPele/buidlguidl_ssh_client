@@ -11,13 +11,9 @@ const INITIAL_STEPS: Step[] = [
     description: "Checking PM2 installation",
     status: "pending",
   },
+
   {
-    command: "npm install --global yarn",
-    description: "Installing Yarn",
-    status: "pending",
-  },
-  {
-    command: " npm install -g pm2",
+    command: "npm install --global yarn && npm install -g pm2",
     description: "Installing PM2",
     status: "pending",
   },

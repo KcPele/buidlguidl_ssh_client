@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import { FaPowerOff, FaRedo, FaSyncAlt } from "react-icons/fa";
 import LoadingModal from "~~/components/ssh/ui/LoadingModal";
 import { executeCommand } from "~~/lib/helper";
@@ -45,7 +46,7 @@ const Action = () => {
   const [currentSteps, setCurrentSteps] = useState<Step[]>([]);
   const [modalTitle, setModalTitle] = useState("");
   const [isCompleted, setIsCompleted] = useState(false);
-
+  const router = useRouter();
   const updateStepStatus = (index: number, updates: Partial<Step>) => {
     setCurrentSteps(currentSteps => currentSteps.map((step, i) => (i === index ? { ...step, ...updates } : step)));
   };
@@ -97,6 +98,7 @@ const Action = () => {
         steps = [...SHUTDOWN_STEPS];
         title = "Shutting Down";
         localStorage.setItem("buidlguidlSetupCompleted", "false");
+        router.push("/dashboard");
         break;
     }
 

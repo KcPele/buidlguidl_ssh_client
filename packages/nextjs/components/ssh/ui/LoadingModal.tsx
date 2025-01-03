@@ -15,8 +15,8 @@ const LoadingModal = ({
   isCompleted: boolean;
 }) => (
   <dialog className={`modal ${isOpen ? "modal-open" : ""}`}>
-    <div className="modal-box max-w-2xl">
-      <h3 className="font-bold text-lg mb-4">{title}</h3>
+    <div className="modal-box max-w-2xl bg-base-100 text-base-content">
+      <h3 className="font-bold text-lg mb-4 text-base-content">{title}</h3>
       <div className="mt-4">
         {steps.map((step, index) => (
           <StepDisplay key={index} step={step} />
@@ -30,6 +30,9 @@ const LoadingModal = ({
         </div>
       )}
     </div>
+    <form method="dialog" className="modal-backdrop">
+      <button onClick={onClose}>Close</button>
+    </form>
   </dialog>
 );
 

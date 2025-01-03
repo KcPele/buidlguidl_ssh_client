@@ -1,14 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import StepDisplay from "./StepDisplay";
-
-interface Step {
-  command: string;
-  description: string;
-  output?: string;
-  status: "pending" | "running" | "completed" | "error";
-  skip?: boolean;
-}
+import { useAccount } from "wagmi";
+import { executeCommand } from "~~/lib/helper";
+import { Step } from "~~/types/ssh/step";
 
 const INITIAL_STEPS: Step[] = [
   {
@@ -17,12 +12,17 @@ const INITIAL_STEPS: Step[] = [
     status: "pending",
   },
   {
+    command: "npm install --global yarn",
+    description: "Installing Yarn",
+    status: "pending",
+  },
+  {
     command: " npm install -g pm2",
     description: "Installing PM2",
     status: "pending",
   },
   {
-    command: "cd $DIRECTORY && pm2 start index.js",
+    command: "cd $DIRECTORY && pm2 start index.js -- --owner $ADDRESS",
     description: "Starting PM2 service",
     status: "pending",
   },
@@ -40,37 +40,13 @@ const ExistingModal = ({
   const [isProcessing, setIsProcessing] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
   const router = useRouter();
-
+  const { address } = useAccount();
   useEffect(() => {
     const savedDirectory = localStorage.getItem("buildguildDirectory");
     if (savedDirectory) {
       setDirectory(savedDirectory);
     }
   }, []);
-
-  const executeCommand = async (command: string) => {
-    const actualCommand = command.replace("$DIRECTORY", directory || "~/buidlguidl-client");
-    try {
-      const response = await fetch("/api/ssh/execute", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          command: actualCommand,
-        }),
-      });
-      const data = await response.json();
-
-      if (data.error) {
-        throw new Error(data.message || "Command execution failed");
-      }
-
-      return data;
-    } catch (error) {
-      throw error;
-    }
-  };
 
   const updateStepStatus = (index: number, updates: Partial<Step>) => {
     setSteps(currentSteps => currentSteps.map((step, i) => (i === index ? { ...step, ...updates } : step)));
@@ -89,7 +65,7 @@ const ExistingModal = ({
       // Check PM2 installation
       updateStepStatus(currentStep, { status: "running" });
       try {
-        const pm2Check = await executeCommand(steps[currentStep].command);
+        const pm2Check = await executeCommand(steps[currentStep].command, directory);
         updateStepStatus(currentStep, { status: "completed", output: pm2Check.output });
         updateStepStatus(currentStep + 1, { status: "completed", skip: true });
         currentStep = 2; // Skip PM2 installation if already installed
@@ -101,7 +77,7 @@ const ExistingModal = ({
         // Install PM2
         updateStepStatus(currentStep, { status: "running" });
         try {
-          const pm2Install = await executeCommand(steps[currentStep].command);
+          const pm2Install = await executeCommand(steps[currentStep].command, directory);
           updateStepStatus(currentStep, { status: "completed", output: pm2Install.output });
         } catch (error) {
           updateStepStatus(currentStep, {
@@ -116,7 +92,7 @@ const ExistingModal = ({
       // Start PM2 service
       updateStepStatus(currentStep, { status: "running" });
       try {
-        const startService = await executeCommand(steps[currentStep].command);
+        const startService = await executeCommand(steps[currentStep].command, directory, address);
         updateStepStatus(currentStep, { status: "completed", output: startService.output });
 
         // Set completion state after all steps are successful

@@ -1,10 +1,4 @@
-interface Step {
-  command: string;
-  description: string;
-  output?: string;
-  status: "pending" | "running" | "completed" | "error";
-  skip?: boolean;
-}
+import { Step } from "~~/types/ssh/step";
 
 const StepDisplay = ({ step }: { step: Step }) => {
   const getStatusIcon = () => {

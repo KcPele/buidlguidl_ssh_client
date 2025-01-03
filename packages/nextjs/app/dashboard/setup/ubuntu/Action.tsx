@@ -1,0 +1,147 @@
+"use client";
+
+import React, { useState } from "react";
+import { FaPowerOff, FaRedo, FaSyncAlt } from "react-icons/fa";
+import LoadingModal from "~~/components/ssh/ui/LoadingModal";
+import { executeCommand } from "~~/lib/helper";
+import { Step } from "~~/types/ssh/step";
+
+const UPDATE_STEPS: Step[] = [
+  {
+    command: " cd $DIRECTORY && git pull",
+    description: "Updating the codebase",
+    status: "pending",
+  },
+  {
+    command: "cd $DIRECTORY && yarn install",
+    description: "Installing dependencies",
+    status: "pending",
+  },
+  {
+    command: "cd $DIRECTORY && pm2 restart all",
+    description: "Restarting the service",
+    status: "pending",
+  },
+];
+
+const RESTART_STEPS: Step[] = [
+  {
+    command: "cd $DIRECTORY && pm2 restart all",
+    description: "Restarting the service",
+    status: "pending",
+  },
+];
+
+const SHUTDOWN_STEPS: Step[] = [
+  {
+    command: "pm2 kill",
+    description: "Stopping the service",
+    status: "pending",
+  },
+];
+
+const Action = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentSteps, setCurrentSteps] = useState<Step[]>([]);
+  const [modalTitle, setModalTitle] = useState("");
+  const [isCompleted, setIsCompleted] = useState(false);
+
+  const updateStepStatus = (index: number, updates: Partial<Step>) => {
+    setCurrentSteps(currentSteps => currentSteps.map((step, i) => (i === index ? { ...step, ...updates } : step)));
+  };
+
+  const processSteps = async (steps: Step[]) => {
+    setIsCompleted(false);
+    const directory = localStorage.getItem("buildguildDirectory") || "~/buidlguidl-client";
+    let currentStep = 0;
+
+    try {
+      for (const step of steps) {
+        updateStepStatus(currentStep, { status: "running" });
+        try {
+          const result = await executeCommand(step.command, directory);
+          updateStepStatus(currentStep, {
+            status: "completed",
+            output: result.output,
+          });
+        } catch (error) {
+          updateStepStatus(currentStep, {
+            status: "error",
+            output: error instanceof Error ? error.message : "Unknown error",
+          });
+          throw error;
+        }
+        currentStep++;
+      }
+      setIsCompleted(true);
+    } catch (error) {
+      console.error("Error during execution:", error);
+      setIsCompleted(true);
+    }
+  };
+
+  const handleAction = (action: "update" | "restart" | "shutdown") => {
+    let steps: Step[];
+    let title: string;
+
+    switch (action) {
+      case "update":
+        steps = [...UPDATE_STEPS];
+        title = "Updating System";
+        break;
+      case "restart":
+        steps = [...RESTART_STEPS];
+        title = "Restarting Services";
+        break;
+      case "shutdown":
+        steps = [...SHUTDOWN_STEPS];
+        title = "Shutting Down";
+        localStorage.setItem("buidlguidlSetupCompleted", "false");
+        break;
+    }
+
+    setCurrentSteps(steps);
+    setModalTitle(title);
+    setIsModalOpen(true);
+    processSteps(steps);
+  };
+
+  return (
+    <div>
+      <h2 className="text-xl font-bold mb-4 hidden md:block">Actions</h2>
+      <nav className="flex flex-col space-y-2">
+        <button
+          onClick={() => handleAction("update")}
+          className="flex items-center space-x-2 p-2 rounded hover:bg-gray-700 transition-colors"
+        >
+          <FaSyncAlt className="text-lg" />
+          <span className="hidden md:block">Update</span>
+        </button>
+        <button
+          onClick={() => handleAction("restart")}
+          className="flex items-center space-x-2 p-2 rounded hover:bg-gray-700 transition-colors"
+        >
+          <FaRedo className="text-lg" />
+          <span className="hidden md:block">Restart</span>
+        </button>
+        <button
+          onClick={() => handleAction("shutdown")}
+          className="flex items-center space-x-2 p-2 rounded hover:bg-gray-700 transition-colors"
+        >
+          <FaPowerOff className="text-lg" />
+          <span className="hidden md:block">Shutdown</span>
+        </button>
+      </nav>
+
+      <LoadingModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        title={modalTitle}
+        steps={currentSteps}
+        isCompleted={isCompleted}
+      />
+    </div>
+  );
+};
+
+export default Action;

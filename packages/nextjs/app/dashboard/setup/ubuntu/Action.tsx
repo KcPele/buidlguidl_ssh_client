@@ -3,8 +3,8 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { FaPowerOff, FaRedo, FaSyncAlt } from "react-icons/fa";
-import LoadingModal from "~~/components/ssh/ui/LoadingModal";
-import { executeCommand } from "~~/lib/helper";
+import LoadingModal from "~~/components/ssh/ubuntu/LoadingModal";
+import { BUIDLGUIDL_DIRECTORY_KEY, SETUP_COMPLETED_KEY, executeCommand } from "~~/lib/helper";
 import { Step } from "~~/types/ssh/step";
 
 const UPDATE_STEPS: Step[] = [
@@ -53,7 +53,7 @@ const Action = () => {
 
   const processSteps = async (steps: Step[]) => {
     setIsCompleted(false);
-    const directory = localStorage.getItem("buidlguidlDirectory") || "~/buidlguidl-client";
+    const directory = localStorage.getItem(BUIDLGUIDL_DIRECTORY_KEY) || "~/buidlguidl-client";
     let currentStep = 0;
 
     try {
@@ -97,7 +97,7 @@ const Action = () => {
       case "shutdown":
         steps = [...SHUTDOWN_STEPS];
         title = "Shutting Down";
-        localStorage.removeItem("buidlguidlSetupCompleted");
+        localStorage.removeItem(SETUP_COMPLETED_KEY);
         //dont redirect immedately
         setTimeout(() => {
           router.push("/dashboard");

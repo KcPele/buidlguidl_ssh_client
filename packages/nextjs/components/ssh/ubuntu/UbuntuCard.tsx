@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import ExistingModal from "./ExistingModal";
 import { FaUbuntu } from "react-icons/fa";
+import { SETUP_COMPLETED_KEY } from "~~/lib/helper";
 
 const UbuntuCard = () => {
   const [isSetupModalOpen, setIsSetupModalOpen] = useState(false);
@@ -12,7 +13,7 @@ const UbuntuCard = () => {
   const router = useRouter();
 
   useEffect(() => {
-    const setupStatus = localStorage.getItem("buidlguidlSetupCompleted");
+    const setupStatus = localStorage.getItem(SETUP_COMPLETED_KEY);
     setIsSetupCompleted(setupStatus === "true");
   }, []);
 

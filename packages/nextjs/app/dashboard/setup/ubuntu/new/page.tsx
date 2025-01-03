@@ -7,7 +7,7 @@ import StepIndicator from "./StepIndicator";
 import { FiAlertTriangle, FiCheck, FiX } from "react-icons/fi";
 import { useAccount } from "wagmi";
 import PasswordModal from "~~/components/ssh/ubuntu/PasswordModal";
-import { executeCommand } from "~~/lib/helper";
+import { BUIDLGUIDL_DIRECTORY_KEY, executeCommand, SETUP_COMPLETED_KEY, SETUP_PROGRESS_KEY } from "~~/lib/helper";
 import { Step } from "~~/types/ssh/step";
 
 const SETUP_STEPS: Step[] = [
@@ -115,7 +115,7 @@ export default function UbuntuSetup() {
 
   const loadSavedProgress = (): { steps: Step[]; currentStep: number } | null => {
     try {
-      const savedProgress = localStorage.getItem("setupProgress");
+      const savedProgress = localStorage.getItem(SETUP_PROGRESS_KEY);
       return savedProgress ? JSON.parse(savedProgress) : null;
     } catch (error) {
       console.error("Error loading saved progress:", error);
@@ -126,7 +126,7 @@ export default function UbuntuSetup() {
   const saveProgress = (updatedSteps: Step[], stepIndex: number) => {
     try {
       localStorage.setItem(
-        "setupProgress",
+        SETUP_PROGRESS_KEY,
         JSON.stringify({
           steps: updatedSteps,
           currentStep: stepIndex,
@@ -237,9 +237,9 @@ export default function UbuntuSetup() {
 
     setIsRunning(false);
     if (!hasError && currentStep === steps.length - 1) {
-      localStorage.removeItem("setupProgress"); // Clear progress on successful completion
-      localStorage.setItem("buidlguidlSetupCompleted", "true");
-      localStorage.setItem("buidlguidlDirectory", "~/buidlguidl-client");
+      localStorage.removeItem(SETUP_PROGRESS_KEY); // Clear progress on successful completion
+      localStorage.setItem(SETUP_COMPLETED_KEY, "true");
+      localStorage.setItem(BUIDLGUIDL_DIRECTORY_KEY, "~/buidlguidl-client");
     }
   };
 

@@ -3,9 +3,13 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Terminal } from "lucide-react";
-
-const STORAGE_KEY = "ssh_server_details";
-const ACTIVE_CONNECTION_KEY = "active_ssh_connection";
+import {
+  BUIDLGUIDL_DIRECTORY_KEY,
+  SERVER_DETAILS_KEY,
+  SETUP_COMPLETED_KEY,
+  SETUP_PROGRESS_KEY,
+  SSH_REMEMBER_ME_KEY,
+} from "~~/lib/helper";
 
 interface ServerDetails {
   host: string;
@@ -38,7 +42,8 @@ const WebSSHClient = () => {
 
   // Load saved details and remember me preference on mount
   useEffect(() => {
-    const savedDetails = localStorage.getItem(STORAGE_KEY);
+    const savedDetails = localStorage.getItem(SERVER_DETAILS_KEY);
+    const savedRememberMe = localStorage.getItem(SSH_REMEMBER_ME_KEY);
     if (savedDetails) {
       try {
         const parsed = JSON.parse(savedDetails);
@@ -52,6 +57,9 @@ const WebSSHClient = () => {
       } catch (e) {
         console.error("Failed to parse saved server details");
       }
+    }
+    if (savedRememberMe) {
+      setRememberMe(savedRememberMe === "true");
     }
   }, [router]);
 
@@ -87,7 +95,10 @@ const WebSSHClient = () => {
 
       setOutput(data);
       setIsConnected(true);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(serverDetails));
+      localStorage.setItem(SERVER_DETAILS_KEY, JSON.stringify(serverDetails));
+      if (rememberMe) {
+        localStorage.setItem(SSH_REMEMBER_ME_KEY, "true");
+      }
       // Redirect to dashboard
       router.push("/dashboard");
     } catch (err) {
@@ -106,12 +117,12 @@ const WebSSHClient = () => {
   };
 
   const handleClearSavedData = () => {
-    localStorage.removeItem(STORAGE_KEY);
-    localStorage.removeItem("ssh_remember_me");
+    localStorage.removeItem(SERVER_DETAILS_KEY);
+    localStorage.removeItem(SSH_REMEMBER_ME_KEY);
     setRememberMe(false);
-    localStorage.removeItem("buidlguidlSetupCompleted");
-    localStorage.removeItem("buidlguidlDirectory");
-    localStorage.removeItem("setupProgress");
+    localStorage.removeItem(SETUP_COMPLETED_KEY);
+    localStorage.removeItem(BUIDLGUIDL_DIRECTORY_KEY);
+    localStorage.removeItem(SETUP_PROGRESS_KEY);
     setServerDetails({
       host: "",
       username: "",

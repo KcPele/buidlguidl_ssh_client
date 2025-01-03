@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import StepDisplay from "./StepDisplay";
 import { useAccount } from "wagmi";
-import { executeCommand } from "~~/lib/helper";
+import { BUIDLGUIDL_DIRECTORY_KEY, SETUP_COMPLETED_KEY, executeCommand } from "~~/lib/helper";
 import { Step } from "~~/types/ssh/step";
 
 const INITIAL_STEPS: Step[] = [
@@ -38,7 +38,7 @@ const ExistingModal = ({
   const router = useRouter();
   const { address } = useAccount();
   useEffect(() => {
-    const savedDirectory = localStorage.getItem("buidlguidlDirectory");
+    const savedDirectory = localStorage.getItem(BUIDLGUIDL_DIRECTORY_KEY);
     if (savedDirectory) {
       setDirectory(savedDirectory);
     }
@@ -92,7 +92,7 @@ const ExistingModal = ({
         updateStepStatus(currentStep, { status: "completed", output: startService.output });
 
         // Set completion state after all steps are successful
-        localStorage.setItem("buidlguidlSetupCompleted", "true");
+        localStorage.setItem(SETUP_COMPLETED_KEY, "true");
         setIsCompleted(true);
       } catch (error) {
         updateStepStatus(currentStep, {
@@ -110,7 +110,7 @@ const ExistingModal = ({
   const handleDirectorySubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const finalDirectory = directory.trim() || "~/buidlguidl-client";
-    localStorage.setItem("buidlguidlDirectory", finalDirectory);
+    localStorage.setItem(BUIDLGUIDL_DIRECTORY_KEY, finalDirectory);
     await processSteps();
   };
 

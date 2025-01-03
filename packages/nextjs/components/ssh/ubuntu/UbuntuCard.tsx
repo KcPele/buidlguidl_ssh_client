@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import ExistingModal from "./ExistingModal";
 import { FaUbuntu } from "react-icons/fa";
@@ -8,11 +8,21 @@ import { FaUbuntu } from "react-icons/fa";
 const UbuntuCard = () => {
   const [isSetupModalOpen, setIsSetupModalOpen] = useState(false);
   const [isDirectoryModalOpen, setIsDirectoryModalOpen] = useState(false);
+  const [isSetupCompleted, setIsSetupCompleted] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    const setupStatus = localStorage.getItem("buidlguidlSetupCompleted");
+    setIsSetupCompleted(setupStatus === "true");
+  }, []);
 
   const handleCardClick = (e: React.MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
-    setIsSetupModalOpen(true);
+    if (isSetupCompleted) {
+      router.push("/dashboard/setup/ubuntu");
+    } else {
+      setIsSetupModalOpen(true);
+    }
   };
 
   const handleSetupChoice = (type: string) => {
@@ -37,28 +47,30 @@ const UbuntuCard = () => {
         </div>
       </div>
 
-      {/* Setup Choice Modal */}
-      <dialog id="setup_modal" className={`modal ${isSetupModalOpen ? "modal-open" : ""}`}>
-        <div className="modal-box">
-          <h3 className="font-bold text-lg mb-4">Choose Setup Type</h3>
-          <div className="flex flex-col gap-4">
-            <button className="btn btn-primary" onClick={() => handleSetupChoice("new")}>
-              New Setup
-            </button>
-            <button className="btn btn-secondary" onClick={() => handleSetupChoice("existing")}>
-              Existing Setup
-            </button>
+      {/* Setup Choice Modal - Only render if setup is not completed */}
+      {!isSetupCompleted && (
+        <dialog id="setup_modal" className={`modal ${isSetupModalOpen ? "modal-open" : ""}`}>
+          <div className="modal-box">
+            <h3 className="font-bold text-lg mb-4">Choose Setup Type</h3>
+            <div className="flex flex-col gap-4">
+              <button className="btn btn-primary" onClick={() => handleSetupChoice("new")}>
+                New Setup
+              </button>
+              <button className="btn btn-secondary" onClick={() => handleSetupChoice("existing")}>
+                Existing Setup
+              </button>
+            </div>
+            <div className="modal-action">
+              <button className="btn btn-ghost" onClick={() => setIsSetupModalOpen(false)}>
+                Cancel
+              </button>
+            </div>
           </div>
-          <div className="modal-action">
-            <button className="btn btn-ghost" onClick={() => setIsSetupModalOpen(false)}>
-              Cancel
-            </button>
-          </div>
-        </div>
-        <form method="dialog" className="modal-backdrop">
-          <button onClick={() => setIsSetupModalOpen(false)}>Close</button>
-        </form>
-      </dialog>
+          <form method="dialog" className="modal-backdrop">
+            <button onClick={() => setIsSetupModalOpen(false)}>Close</button>
+          </form>
+        </dialog>
+      )}
 
       <ExistingModal isDirectoryModalOpen={isDirectoryModalOpen} setIsDirectoryModalOpen={setIsDirectoryModalOpen} />
     </>

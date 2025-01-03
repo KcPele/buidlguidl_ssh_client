@@ -120,7 +120,7 @@ const ExistingModal = ({
         updateStepStatus(currentStep, { status: "completed", output: startService.output });
 
         // Set completion state after all steps are successful
-        localStorage.setItem("buildguildExistingSetupCompleted", "true");
+        localStorage.setItem("buidlguidlSetupCompleted", "true");
         setIsCompleted(true);
       } catch (error) {
         updateStepStatus(currentStep, {

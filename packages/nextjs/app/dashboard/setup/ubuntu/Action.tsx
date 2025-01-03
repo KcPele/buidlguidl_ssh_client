@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { FaPowerOff, FaRedo, FaSyncAlt } from "react-icons/fa";
 import LoadingModal from "~~/components/ssh/ubuntu/LoadingModal";
-import { BUIDLGUIDL_DIRECTORY_KEY, SETUP_COMPLETED_KEY, executeCommand } from "~~/lib/helper";
+import { BUIDLGUIDL_DIRECTORY_KEY, SETUP_COMPLETED_KEY, SETUP_PROGRESS_KEY, executeCommand } from "~~/lib/helper";
 import { Step } from "~~/types/ssh/step";
 
 const UPDATE_STEPS: Step[] = [
@@ -98,6 +98,7 @@ const Action = () => {
         steps = [...SHUTDOWN_STEPS];
         title = "Shutting Down";
         localStorage.removeItem(SETUP_COMPLETED_KEY);
+        localStorage.removeItem(SETUP_PROGRESS_KEY);
         //dont redirect immedately
         setTimeout(() => {
           router.push("/dashboard");

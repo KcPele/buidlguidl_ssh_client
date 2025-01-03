@@ -95,7 +95,7 @@ class ConnectionManager {
             });
         });
       } else {
-        throw new Error("No active session");
+        throw new Error("No active session login again");
       }
     }
 

@@ -8,22 +8,16 @@ interface ExecuteCommandRequest {
 export async function POST(req: NextRequest) {
   try {
     const { command } = (await req.json()) as ExecuteCommandRequest;
-    console.log("Original command:", command);
-
     const sessionId = req.cookies.get("ssh_session")?.value;
     if (!sessionId) {
-      throw new Error("No active session");
+      throw new Error("No active session login again");
     }
 
     const conn = await connectionManager.getConnection(sessionId);
-
     const wrappedCommand = `/bin/bash -i -c 'source ~/.bashrc 2>/dev/null; ${command}'`;
-    console.log("Wrapped command:", wrappedCommand);
-
     const output = await new Promise<string>((resolve, reject) => {
       conn.exec(wrappedCommand, (err: any, stream: any) => {
         if (err) {
-          console.error("SSH execution error:", err);
           reject(err);
           return;
         }
@@ -33,18 +27,18 @@ export async function POST(req: NextRequest) {
 
         stream.on("data", (data: Buffer) => {
           const str = data.toString();
-          console.log("Stream data:", str);
+          // console.log("Stream data:", str);
           output += str;
         });
 
         stream.stderr.on("data", (data: Buffer) => {
           const str = data.toString();
-          console.log("Stream error:", str);
+          // console.log("Stream error:", str);
           errorOutput += str;
         });
 
         stream.on("close", () => {
-          console.log("Stream closed. Output:", output, "Error:", errorOutput);
+          // console.log("Stream closed. Output:", output, "Error:", errorOutput);
           if (command.includes("git clone") && errorOutput) {
             resolve(output + errorOutput);
           } else if (errorOutput && !output) {
@@ -55,16 +49,15 @@ export async function POST(req: NextRequest) {
         });
 
         stream.on("error", (err: any) => {
-          console.error("Stream error event:", err);
+          // console.error("Stream error event:", err);
           reject(err);
         });
       });
     });
 
-    console.log("Final output:", output);
     return NextResponse.json({ output });
   } catch (error) {
-    console.error("Command execution error:", error);
+    // console.error("Command execution error:", error);
     return NextResponse.json(
       {
         error: "Command execution failed",

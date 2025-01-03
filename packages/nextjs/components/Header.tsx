@@ -1,12 +1,11 @@
 "use client";
 
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useRouter } from "next/navigation";
 import { RainbowKitCustomConnectButton } from "./scaffold-eth";
-import { Bars3Icon, BugAntIcon } from "@heroicons/react/24/outline";
+import { Bars3Icon } from "@heroicons/react/24/outline";
 import { useOutsideClick } from "~~/hooks/scaffold-eth";
 
 type HeaderMenuLink = {
@@ -14,9 +13,6 @@ type HeaderMenuLink = {
   href: string;
   icon?: React.ReactNode;
 };
-interface ActiveConnection {
-  username: string;
-}
 
 export const menuLinks: HeaderMenuLink[] = [
   {
@@ -26,12 +22,6 @@ export const menuLinks: HeaderMenuLink[] = [
   { href: "/connection", label: "Connection" },
   { href: "/dashboard", label: "Overview" },
   { href: "/dashboard/setup/ubuntu", label: "Setup Ubuntu Node" },
-
-  {
-    label: "Debug Contracts",
-    href: "/debug",
-    icon: <BugAntIcon className="h-4 w-4" />,
-  },
 ];
 
 export const HeaderMenuLinks = () => {
@@ -66,22 +56,6 @@ export const HeaderMenuLinks = () => {
 export const Header = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const burgerMenuRef = useRef<HTMLDivElement>(null);
-  const router = useRouter();
-  const [connection, setConnection] = useState<ActiveConnection | null>(null);
-
-  useEffect(() => {
-    const activeConnection = localStorage.getItem("active_ssh_connection");
-    if (!activeConnection) {
-      router.push("/");
-      return;
-    }
-    setConnection(JSON.parse(activeConnection));
-  }, [router]);
-
-  const handleDisconnect = () => {
-    localStorage.removeItem("active_ssh_connection");
-    router.push("/");
-  };
 
   useOutsideClick(
     burgerMenuRef,

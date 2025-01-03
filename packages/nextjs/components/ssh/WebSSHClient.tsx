@@ -93,7 +93,6 @@ const WebSSHClient = () => {
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred");
       setIsConnected(false);
-    } finally {
       setLoading(false);
     }
   };
@@ -110,6 +109,7 @@ const WebSSHClient = () => {
     localStorage.removeItem(STORAGE_KEY);
     localStorage.removeItem("ssh_remember_me");
     setRememberMe(false);
+    localStorage.removeItem("buidlguidlSetupCompleted");
     setServerDetails({
       host: "",
       username: "",

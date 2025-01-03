@@ -1,5 +1,13 @@
-export const executeCommand = async (command: string, directory: string | "~/buidlguidl-client", address?: string) => {
-  const actualCommand = command.replace("$DIRECTORY", directory).replace("$ADDRESS", address || "");
+export const executeCommand = async (
+  command: string,
+  directory: string | "~/buidlguidl-client",
+  address?: string,
+  password?: string,
+) => {
+  const actualCommand = command
+    .replace("$DIRECTORY", directory)
+    .replace("$ADDRESS", address || "")
+    .replace("$PASSWORD", password || "");
 
   try {
     const response = await fetch("/api/ssh/execute", {

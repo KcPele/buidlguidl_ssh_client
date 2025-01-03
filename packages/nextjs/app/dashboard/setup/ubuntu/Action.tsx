@@ -97,7 +97,7 @@ const Action = () => {
       case "shutdown":
         steps = [...SHUTDOWN_STEPS];
         title = "Shutting Down";
-        localStorage.setItem("buidlguidlSetupCompleted", "false");
+        localStorage.removeItem("buidlguidlSetupCompleted");
         router.push("/dashboard");
         break;
     }

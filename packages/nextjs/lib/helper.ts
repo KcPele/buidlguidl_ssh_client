@@ -5,6 +5,7 @@ export const BUIDLGUIDL_DIRECTORY_KEY = "buidlguidlDirectory";
 export const SETUP_COMPLETED_KEY = "buidlguidlSetupCompleted";
 export const SETUP_PROGRESS_KEY = "setupProgress";
 export const SSH_REMEMBER_ME_KEY = "ssh_remember_me";
+
 export const executeCommand = async (
   command: string,
   directory: string | "~/buidlguidl-client",

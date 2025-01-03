@@ -4,10 +4,11 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import SetupProgress from "./SetupProgress";
 import StepIndicator from "./StepIndicator";
+import { Activity, Code, Database, Package, Settings, Terminal } from "lucide-react";
 import { FiAlertTriangle, FiCheck, FiX } from "react-icons/fi";
 import { useAccount } from "wagmi";
 import PasswordModal from "~~/components/ssh/ubuntu/PasswordModal";
-import { BUIDLGUIDL_DIRECTORY_KEY, executeCommand, SETUP_COMPLETED_KEY, SETUP_PROGRESS_KEY } from "~~/lib/helper";
+import { BUIDLGUIDL_DIRECTORY_KEY, SETUP_COMPLETED_KEY, SETUP_PROGRESS_KEY, executeCommand } from "~~/lib/helper";
 import { Step } from "~~/types/ssh/step";
 
 const SETUP_STEPS: Step[] = [
@@ -92,7 +93,17 @@ const SETUP_STEPS: Step[] = [
     status: "pending",
   },
 ];
-
+// Helper function to get card icon
+const getCategoryIcon = (category: string) => {
+  switch (category) {
+    case "System Updates":
+      return <Package className="h-5 w-5" />;
+    case "Node.js Setup":
+      return <Code className="h-5 w-5" />;
+    default:
+      return <Database className="h-5 w-5" />;
+  }
+};
 export default function UbuntuSetup() {
   const router = useRouter();
   const { address } = useAccount();
@@ -246,42 +257,112 @@ export default function UbuntuSetup() {
   const initiateSetup = () => {
     setIsPasswordModalOpen(true);
   };
-
   return (
-    <div className="max-w-4xl mx-auto p-4">
-      <div className="card bg-base-100 shadow-xl">
-        <div className="card-body">
-          <h2 className="card-title text-2xl mb-6">Ubuntu Node Setup</h2>
+    <div className="min-h-screen bg-base-200">
+      {/* Top Navigation Bar */}
+      <div className="navbar bg-base-100 shadow-lg px-6">
+        <div className="flex-1">
+          <div className="flex items-center gap-3">
+            <Settings className="h-6 w-6 text-primary" />
+            <h1 className="text-xl font-bold">Node Setup Dashboard</h1>
+          </div>
+        </div>
+        <div className="flex-none">
+          <Activity className="h-5 w-5 text-success animate-pulse" />
+          <span className="ml-2 text-sm">Status: {isRunning ? "Running" : "Ready"}</span>
+        </div>
+      </div>
 
-          <SetupProgress steps={steps} />
-
-          {!isRunning && currentStep === -1 && (
-            <div className="py-4 space-y-4">
-              <div className="alert alert-info shadow-lg">
-                <FiAlertTriangle className="text-lg" />
-                <div>
-                  <h3 className="font-bold">Before you begin</h3>
-                  <p className="text-sm">
-                    Ensure you have sudo access and a stable internet connection. This process will take several minutes
-                    to complete.
-                  </p>
-                </div>
+      <div className="container mx-auto p-6">
+        {/* Top Section - Progress and Controls */}
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-6">
+          {/* Setup Progress Card */}
+          <div className="xl:col-span-2">
+            <div className="card bg-base-100 shadow-xl">
+              <div className="card-body">
+                <h2 className="card-title text-lg mb-4">Overall Progress</h2>
+                <SetupProgress steps={steps} />
               </div>
-              <button onClick={initiateSetup} className="btn btn-primary w-full md:w-auto">
-                Start Setup Process
-              </button>
             </div>
-          )}
+          </div>
 
-          <div className="space-y-8">
-            {Object.entries(groupedSteps).map(([category, categorySteps]) => (
-              <div key={category}>
-                <h3 className="text-lg font-semibold mb-4">{category}</h3>
+          {/* Control Panel Card */}
+          <div className="xl:col-span-1">
+            <div className="card bg-base-100 shadow-xl">
+              <div className="card-body">
+                <h2 className="card-title text-lg mb-4">Controls</h2>
+                {!isRunning && currentStep === -1 && (
+                  <div className="space-y-4">
+                    <div className="alert alert-info bg-info/10 border border-info">
+                      <FiAlertTriangle className="h-5 w-5" />
+                      <div>
+                        <h3 className="font-bold">Prerequisites</h3>
+                        <p className="text-sm">Sudo access and stable internet required</p>
+                      </div>
+                    </div>
+                    <button onClick={initiateSetup} className="btn btn-primary w-full gap-2">
+                      <Terminal className="h-4 w-4" />
+                      Start Setup Process
+                    </button>
+                  </div>
+                )}
+
+                {!isRunning && hasError && (
+                  <div className="space-y-4">
+                    <div className="alert alert-error bg-error/10 border border-error">
+                      <FiX className="h-5 w-5" />
+                      <div>
+                        <h3 className="font-bold">Setup Failed</h3>
+                        <p className="text-sm">Please check errors and retry</p>
+                      </div>
+                    </div>
+                    <button onClick={initiateSetup} className="btn btn-error w-full">
+                      Retry Setup
+                    </button>
+                  </div>
+                )}
+
+                {!isRunning && !hasError && currentStep >= 0 && currentStep === steps.length - 1 && (
+                  <div className="space-y-4">
+                    <div className="alert alert-success bg-success/10 border border-success">
+                      <FiCheck className="h-5 w-5" />
+                      <div>
+                        <h3 className="font-bold">Setup Complete</h3>
+                        <p className="text-sm">Node configured successfully</p>
+                      </div>
+                    </div>
+                    <button onClick={() => router.push("/dashboard/setup/ubuntu")} className="btn btn-success w-full">
+                      Go to Dashboard
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Setup Process Categories */}
+        <div className="space-y-6">
+          {Object.entries(groupedSteps).map(([category, categorySteps]) => (
+            <div key={category} className="card bg-base-100 shadow-xl">
+              <div className="card-body">
+                <div className="flex items-center gap-3 mb-6">
+                  {getCategoryIcon(category)}
+                  <h2 className="card-title text-lg">{category}</h2>
+                  <div className="flex-1"></div>
+                  {/* Category Progress Badge */}
+                  <div className="badge badge-lg">
+                    {categorySteps.filter(step => step.status === "completed").length}
+                    <span className="mx-1">/</span>
+                    {categorySteps.length}
+                  </div>
+                </div>
+
                 <div className="space-y-4">
                   {categorySteps.map((step, index) => (
                     <div
                       key={index}
-                      className={`p-4 rounded-lg border transition-colors duration-300 ${
+                      className={`rounded-lg border-2 transition-all duration-300 ${
                         step.status === "running"
                           ? "border-primary bg-primary/5"
                           : step.status === "completed"
@@ -291,16 +372,15 @@ export default function UbuntuSetup() {
                               : "border-base-300"
                       }`}
                     >
-                      <div className="flex items-center gap-3">
-                        <StepIndicator status={step.status} />
-                        <div className="flex-1">
-                          <h4 className="font-medium">{step.description}</h4>
-                          <code className="text-xs opacity-70">{step.command}</code>
-                        </div>
-                        <span
-                          className={`
-                            badge
-                            ${
+                      <div className="p-4">
+                        <div className="flex items-center gap-3">
+                          <StepIndicator status={step.status} />
+                          <div className="flex-1 min-w-0">
+                            <h4 className="font-medium truncate">{step.description}</h4>
+                            <code className="text-xs opacity-70 block truncate">{step.command}</code>
+                          </div>
+                          <span
+                            className={`badge ${
                               step.status === "running"
                                 ? "badge-primary"
                                 : step.status === "completed"
@@ -308,56 +388,26 @@ export default function UbuntuSetup() {
                                   : step.status === "error"
                                     ? "badge-error"
                                     : "badge-ghost"
-                            }
-                          `}
-                        >
-                          {step.status}
-                        </span>
-                      </div>
-
-                      {step.output && (
-                        <div className="mt-3 bg-base-300 p-3 rounded-lg">
-                          <pre className="text-xs overflow-x-auto whitespace-pre-wrap">{step.output}</pre>
+                            }`}
+                          >
+                            {step.status}
+                          </span>
                         </div>
-                      )}
+
+                        {step.output && (
+                          <div className="mt-3">
+                            <div className="bg-base-300 rounded-lg p-3 max-h-32 overflow-y-auto">
+                              <pre className="text-xs whitespace-pre-wrap">{step.output}</pre>
+                            </div>
+                          </div>
+                        )}
+                      </div>
                     </div>
                   ))}
                 </div>
               </div>
-            ))}
-          </div>
-
-          {!isRunning && hasError && (
-            <div className="mt-6">
-              <div className="alert alert-error shadow-lg">
-                <FiX className="text-lg" />
-                <div>
-                  <h3 className="font-bold">Setup Failed</h3>
-                  <p className="text-sm">
-                    An error occurred during setup. Please check the error messages above and try again.
-                  </p>
-                </div>
-              </div>
-              <button onClick={initiateSetup} className="btn btn-error mt-4">
-                Retry Setup
-              </button>
             </div>
-          )}
-
-          {!isRunning && !hasError && currentStep >= 0 && currentStep === steps.length - 1 && (
-            <div className="mt-6">
-              <div className="alert alert-success shadow-lg">
-                <FiCheck className="text-lg" />
-                <div>
-                  <h3 className="font-bold">Setup Complete</h3>
-                  <p className="text-sm">Your node has been successfully configured and started.</p>
-                </div>
-              </div>
-              <button onClick={() => router.push("/dashboard/setup/ubuntu")} className="btn btn-primary mt-4">
-                Go to Dashboard
-              </button>
-            </div>
-          )}
+          ))}
         </div>
       </div>
 

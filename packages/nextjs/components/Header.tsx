@@ -20,8 +20,8 @@ export const menuLinks: HeaderMenuLink[] = [
     href: "/",
   },
   { href: "/connection", label: "Connection" },
-  { href: "/dashboard", label: "Overview" },
-  { href: "/dashboard/setup/ubuntu", label: "Setup Ubuntu Node" },
+  { href: "/dashboard", label: "Setup" },
+  { href: "/dashboard/setup/ubuntu", label: "Ubuntu" },
 ];
 
 export const HeaderMenuLinks = () => {

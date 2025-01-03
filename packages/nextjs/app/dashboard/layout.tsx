@@ -2,15 +2,17 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useAccount } from "wagmi";
 import { SERVER_DETAILS_KEY } from "~~/lib/helper";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
+  const { address } = useAccount();
 
   useEffect(() => {
     const savedDetails = localStorage.getItem(SERVER_DETAILS_KEY);
-    if (savedDetails) {
+    if (savedDetails && address) {
       setIsLoading(false);
     } else {
       router.push("/connection");

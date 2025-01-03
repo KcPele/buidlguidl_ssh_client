@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectionManager } from "~~/app/api/lib/connectionManager";
 import { parseLogLine } from "~~/app/api/lib/utils";
+import { DEFAULT_DIRECTORY } from "~~/lib/helper";
 
 export async function GET(req: NextRequest) {
   try {
@@ -9,7 +10,7 @@ export async function GET(req: NextRequest) {
       throw new Error("No active session");
     }
     const { searchParams } = new URL(req.url);
-    const directory = searchParams.get("directory") || "~/buidlguidl-client";
+    const directory = searchParams.get("directory") || DEFAULT_DIRECTORY;
 
     const conn = await connectionManager.getConnection(sessionId);
 

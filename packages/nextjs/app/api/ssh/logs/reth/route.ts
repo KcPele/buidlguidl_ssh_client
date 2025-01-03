@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectionManager } from "~~/app/api/lib/connectionManager";
+import { DEFAULT_DIRECTORY } from "~~/lib/helper";
 
 export async function GET(req: NextRequest) {
   try {
@@ -9,10 +10,9 @@ export async function GET(req: NextRequest) {
     }
     // Get the directory from query parameters, with a default value
     const { searchParams } = new URL(req.url);
-    const directory = searchParams.get("directory") || "~/buidlguidl-client";
+    const directory = searchParams.get("directory") || DEFAULT_DIRECTORY;
 
     const conn = await connectionManager.getConnection(sessionId);
-    console.log("directory", directory);
     const logPath = directory + "/ethereum_clients/reth/logs";
     const command = `
     tail -n 50 $(ls -t ${logPath}/reth_*.log | head -n 1)

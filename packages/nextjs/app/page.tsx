@@ -400,8 +400,8 @@ export default function LandingPage() {
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-4xl font-bold text-base-content mb-6">Ready to Transform Your Node Management?</h2>
           <p className="text-xl text-base-content/70 mb-8 max-w-2xl mx-auto">
-            Join thousands of developers who trust our platform for their node management needs. Get started in minutes
-            with our automated setup process.
+            Join other buidlguidl developers who trust our platform for their node management needs. Get started in
+            minutes with our automated setup process.
           </p>
           <div className="flex gap-4 justify-center">
             <Link href="/connection" className="btn btn-primary btn-lg">

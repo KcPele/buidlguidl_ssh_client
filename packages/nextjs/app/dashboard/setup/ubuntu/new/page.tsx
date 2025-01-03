@@ -8,7 +8,13 @@ import { Activity, Code, Database, Package, Settings, Terminal } from "lucide-re
 import { FiAlertTriangle, FiCheck, FiX } from "react-icons/fi";
 import { useAccount } from "wagmi";
 import PasswordModal from "~~/components/ssh/ubuntu/PasswordModal";
-import { BUIDLGUIDL_DIRECTORY_KEY, SETUP_COMPLETED_KEY, SETUP_PROGRESS_KEY, executeCommand } from "~~/lib/helper";
+import {
+  BUIDLGUIDL_DIRECTORY_KEY,
+  DEFAULT_DIRECTORY,
+  SETUP_COMPLETED_KEY,
+  SETUP_PROGRESS_KEY,
+  executeCommand,
+} from "~~/lib/helper";
 import { Step } from "~~/types/ssh/step";
 
 const SETUP_STEPS: Step[] = [
@@ -190,8 +196,9 @@ export default function UbuntuSetup() {
 
     // Start from the last successful step or the beginning
     const startIndex = Math.max(currentStep, 0);
-
+    let innerCurrentStep = currentStep;
     for (let i = startIndex; i < steps.length; i++) {
+      innerCurrentStep = i;
       setCurrentStep(i);
 
       // Update current step to running while keeping previous steps' states
@@ -247,10 +254,12 @@ export default function UbuntuSetup() {
     }
 
     setIsRunning(false);
-    if (!hasError && currentStep === steps.length - 1) {
+
+    if (!hasError && innerCurrentStep === steps.length - 1) {
       localStorage.removeItem(SETUP_PROGRESS_KEY); // Clear progress on successful completion
+      console.log("Setting setup completed to true");
       localStorage.setItem(SETUP_COMPLETED_KEY, "true");
-      localStorage.setItem(BUIDLGUIDL_DIRECTORY_KEY, "~/buidlguidl-client");
+      localStorage.setItem(BUIDLGUIDL_DIRECTORY_KEY, DEFAULT_DIRECTORY);
     }
   };
 

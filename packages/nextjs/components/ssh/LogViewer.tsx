@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { BUIDLGUIDL_DIRECTORY_KEY } from "~~/lib/helper";
 
 interface Log {
   level: string;
@@ -35,7 +36,7 @@ export function LogViewer({ url, title }: { url: string; title: string }) {
   const { data, isLoading, error, isError } = useQuery({
     queryKey: ["logs", url],
     queryFn: async () => {
-      const directory = localStorage.getItem("buildguildDirectory") || "";
+      const directory = localStorage.getItem(BUIDLGUIDL_DIRECTORY_KEY) || "";
       const response = await fetch(url + "?directory=" + directory);
       if (!response.ok) {
         const errorData = await response.json();

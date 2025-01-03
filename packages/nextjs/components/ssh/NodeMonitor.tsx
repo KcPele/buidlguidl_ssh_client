@@ -11,9 +11,34 @@ interface SystemMetrics {
   uptime: number;
 }
 
+const LoadingSkeleton = () => (
+  <div className="bg-white rounded-lg shadow-md p-6 animate-pulse">
+    <div className="flex items-center justify-between mb-6">
+      <div className="h-7 w-48 bg-gray-200 rounded"></div>
+      <div className="flex items-center space-x-2">
+        <div className="w-3 h-3 rounded-full bg-gray-200"></div>
+        <div className="h-5 w-16 bg-gray-200 rounded"></div>
+      </div>
+    </div>
+
+    <div className="space-y-6 flex gap-3 flex-col md:flex-row md:items-end justify-center">
+      <div className="flex-1 min-w-0">
+        <div className="h-6 w-24 bg-gray-200 rounded mb-4"></div>
+        <div className="w-full h-[200px] bg-gray-200 rounded"></div>
+      </div>
+
+      <div className="flex-1 min-w-0">
+        <div className="h-6 w-32 bg-gray-200 rounded mb-4"></div>
+        <div className="w-full h-[200px] bg-gray-200 rounded"></div>
+      </div>
+    </div>
+  </div>
+);
+
 export function NodeMonitor() {
   const [metrics, setMetrics] = useState<SystemMetrics[]>([]);
   const [status, setStatus] = useState<"running" | "stopped" | "error">("stopped");
+
   const { data, isLoading, error, isError } = useQuery({
     queryKey: ["metrics"],
     queryFn: async () => {
@@ -24,11 +49,11 @@ export function NodeMonitor() {
         throw new Error(errorData.message || "Failed to fetch metrics");
       }
 
-      // If OK, return the data
       return res.json();
     },
     refetchInterval: 10000,
   });
+
   useEffect(() => {
     if (data) {
       setStatus("running");
@@ -38,6 +63,10 @@ export function NodeMonitor() {
       setStatus("error");
     }
   }, [data, isError, error]);
+
+  if (isLoading) {
+    return <LoadingSkeleton />;
+  }
 
   return (
     <div className="bg-white rounded-lg shadow-md p-6">

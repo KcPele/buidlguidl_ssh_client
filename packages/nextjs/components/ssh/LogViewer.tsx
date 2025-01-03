@@ -1,17 +1,37 @@
-"use client";
-
 import { useEffect, useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 
 interface Log {
-  level: string; // info, warn, error
+  level: string;
   message: string;
 }
+
+const LoadingSkeleton = () => (
+  <div className="animate-pulse">
+    <div className="flex items-center justify-between mb-4">
+      <div className="h-6 w-32 bg-gray-200 rounded"></div>
+      <div className="flex space-x-2">
+        {[1, 2, 3, 4].map(i => (
+          <div key={i} className="h-8 w-16 bg-gray-200 rounded"></div>
+        ))}
+      </div>
+    </div>
+    <div className="h-[400px] bg-gray-50 rounded p-4">
+      {[...Array(8)].map((_, index) => (
+        <div key={index} className="mb-2 flex items-center">
+          <div className="h-6 w-16 bg-gray-200 rounded mr-2"></div>
+          <div className="h-6 w-full bg-gray-200 rounded"></div>
+        </div>
+      ))}
+    </div>
+  </div>
+);
 
 export function LogViewer({ url, title }: { url: string; title: string }) {
   const [logs, setLogs] = useState<Log[]>([]);
   const [filter, setFilter] = useState<"all" | "info" | "warn" | "error">("all");
   const logContainerRef = useRef<HTMLDivElement>(null);
+
   const { data, isLoading, error, isError } = useQuery({
     queryKey: ["logs", url],
     queryFn: async () => {
@@ -23,9 +43,9 @@ export function LogViewer({ url, title }: { url: string; title: string }) {
       }
       return response.json();
     },
-
     refetchInterval: 10000,
   });
+
   useEffect(() => {
     if (data) {
       if (data.logs && Array.isArray(data.logs)) {
@@ -46,6 +66,15 @@ export function LogViewer({ url, title }: { url: string; title: string }) {
   }, [data, isError, error]);
 
   const filteredLogs = logs.filter(log => (filter === "all" ? true : log.level === filter));
+
+  if (isLoading) {
+    return (
+      <div className="bg-white rounded-lg shadow-md p-6 w-full">
+        <LoadingSkeleton />
+      </div>
+    );
+  }
+
   return (
     <div className="bg-white rounded-lg shadow-md p-6 w-full">
       <div className="flex items-center justify-between mb-4">
@@ -55,7 +84,9 @@ export function LogViewer({ url, title }: { url: string; title: string }) {
             <button
               key={f}
               onClick={() => setFilter(f as typeof filter)}
-              className={`px-3 py-1 rounded ${filter === f ? "bg-indigo-100 text-indigo-800" : "bg-gray-100"}`}
+              className={`px-3 py-1 rounded transition-colors duration-200 ${
+                filter === f ? "bg-indigo-100 text-indigo-800" : "bg-gray-100 hover:bg-gray-200"
+              }`}
             >
               {f.charAt(0).toUpperCase() + f.slice(1)}
             </button>
@@ -63,7 +94,7 @@ export function LogViewer({ url, title }: { url: string; title: string }) {
         </div>
       </div>
 
-      {error && <div className="text-red-600 mb-4">{error.message}</div>}
+      {error && <div className="text-red-600 mb-4 p-3 bg-red-50 rounded-md">{error.message}</div>}
 
       <div
         ref={logContainerRef}
@@ -72,7 +103,7 @@ export function LogViewer({ url, title }: { url: string; title: string }) {
         {filteredLogs.map((log, index) => (
           <div
             key={index}
-            className={`mb-2 p-2 whitespace-pre-wrap break-all rounded ${
+            className={`mb-2 p-2 whitespace-pre-wrap break-all rounded transition-colors duration-200 ${
               log.level === "error"
                 ? "bg-red-50 text-red-800"
                 : log.level === "warn"

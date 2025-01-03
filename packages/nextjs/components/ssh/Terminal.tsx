@@ -80,19 +80,23 @@ export function Terminal({ output }: TerminalProps) {
   };
 
   return (
-    <div
-      className="bg-gray-900 rounded-lg p-4 h-[600px] overflow-auto text-blue-400 font-mono text-sm whitespace-pre-wrap cursor-text"
-      ref={terminalRef}
-      tabIndex={0} // Make the div focusable
-      onKeyDown={handleKeyDown}
-    >
-      {log.map((line, index) => (
-        <div key={index}>{line}</div>
-      ))}
-      <div className="flex items-center">
-        <span className="text-blue-400">{"> "}</span>
-        <span className="text-blue-300">{currentInput}</span>
-        <span className={`${isLoading ? "ml-1 rotating-cursor" : "blinking-cursor"} `}>|</span>
+    <div className="relative h-[600px] w-full">
+      <div
+        className="absolute inset-0 bg-gray-900 rounded-lg p-3 overflow-y-auto overflow-x-hidden text-blue-400 font-mono text-sm whitespace-pre-wrap cursor-text"
+        ref={terminalRef}
+        tabIndex={0}
+        onKeyDown={handleKeyDown}
+      >
+        {log.map((line, index) => (
+          <div key={index} className="break-words">
+            {line}
+          </div>
+        ))}
+        <div className="flex items-center">
+          <span className="text-blue-400">{"> "}</span>
+          <span className="text-blue-300">{currentInput}</span>
+          <span className={`${isLoading ? "ml-1 rotating-cursor" : "blinking-cursor"}`}>|</span>
+        </div>
       </div>
     </div>
   );

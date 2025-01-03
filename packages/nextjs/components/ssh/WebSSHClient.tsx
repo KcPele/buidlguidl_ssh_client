@@ -26,7 +26,6 @@ const WebSSHClient = () => {
     password: "",
     port: "22",
   });
-  const [isConnected, setIsConnected] = useState(false);
   const [error, setError] = useState("");
   const [output, setOutput] = useState<{
     success: boolean;
@@ -94,7 +93,7 @@ const WebSSHClient = () => {
       }
 
       setOutput(data);
-      setIsConnected(true);
+
       localStorage.setItem(SERVER_DETAILS_KEY, JSON.stringify(serverDetails));
       if (rememberMe) {
         localStorage.setItem(SSH_REMEMBER_ME_KEY, "true");
@@ -103,7 +102,6 @@ const WebSSHClient = () => {
       router.push("/dashboard");
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred");
-      setIsConnected(false);
       setLoading(false);
     }
   };

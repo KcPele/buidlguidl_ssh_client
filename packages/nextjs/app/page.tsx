@@ -1,17 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import {
   Activity,
-  BarChart3,
   CheckCircle,
   Clock,
-  Code,
   Command,
-  Cpu,
   Database,
   Globe,
   Lock,
@@ -33,60 +29,56 @@ interface Step {
   output: string;
   isCompleted: boolean;
 }
+const steps: Step[] = [
+  {
+    id: "system-update",
+    title: "System Update",
+    commands: ["sudo apt update", "sudo apt upgrade -y", "sudo apt install curl -y"],
+    status: "completed",
+    output: "",
+    isCompleted: true,
+  },
+  {
+    id: "node-install",
+    title: "Node.js Installation",
+    commands: [
+      "curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash",
+      "source ~/.bashrc",
+      "nvm install --lts",
+    ],
+    status: "completed",
+    output: "",
+    isCompleted: true,
+  },
+  {
+    id: "git-yarn",
+    title: "Git and Yarn Installation",
+    commands: ["sudo apt install git -y", "npm install --global yarn"],
+    status: "completed",
+    output: "",
+    isCompleted: true,
+  },
+  {
+    id: "pm2-install",
+    title: "PM2 Installation",
+    commands: ["yarn global add pm2"],
+    status: "completed",
+    output: "",
+    isCompleted: true,
+  },
+  {
+    id: "clone-repo",
+    title: "Clone GitHub Repository",
+    commands: ["git clone https://github.com/BuidlGuidl/buidlguidl-client.git", "cd buidlguidl-client", "yarn install"],
+    status: "completed",
+    output: "",
+    isCompleted: true,
+  },
+];
 // Updated Landing Page
 export default function LandingPage() {
   const [isVisible, setIsVisible] = useState(false);
   const [activeTab, setActiveTab] = useState("overview");
-  const [steps, setSteps] = useState<Step[]>([
-    {
-      id: "system-update",
-      title: "System Update",
-      commands: ["sudo apt update", "sudo apt upgrade -y", "sudo apt install curl -y"],
-      status: "completed",
-      output: "",
-      isCompleted: true,
-    },
-    {
-      id: "node-install",
-      title: "Node.js Installation",
-      commands: [
-        "curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash",
-        "source ~/.bashrc",
-        "nvm install --lts",
-      ],
-      status: "completed",
-      output: "",
-      isCompleted: true,
-    },
-    {
-      id: "git-yarn",
-      title: "Git and Yarn Installation",
-      commands: ["sudo apt install git -y", "npm install --global yarn"],
-      status: "completed",
-      output: "",
-      isCompleted: true,
-    },
-    {
-      id: "pm2-install",
-      title: "PM2 Installation",
-      commands: ["yarn global add pm2"],
-      status: "completed",
-      output: "",
-      isCompleted: true,
-    },
-    {
-      id: "clone-repo",
-      title: "Clone GitHub Repository",
-      commands: [
-        "git clone https://github.com/BuidlGuidl/buidlguidl-client.git",
-        "cd buidlguidl-client",
-        "yarn install",
-      ],
-      status: "completed",
-      output: "",
-      isCompleted: true,
-    },
-  ]);
 
   useEffect(() => {
     setIsVisible(true);

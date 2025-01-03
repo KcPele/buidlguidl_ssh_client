@@ -41,7 +41,8 @@ export default function NotFound() {
               Oops! Lost in Space
             </h1>
             <p className="text-xl text-base-content/70 mb-8">
-              The page you're looking for has drifted into deep space. Let's get you back to familiar territory.
+              The page you&lsquo;re looking for has drifted into deep space. Let&lsquo;s get you back to familiar
+              territory.
             </p>
 
             {/* Buttons */}

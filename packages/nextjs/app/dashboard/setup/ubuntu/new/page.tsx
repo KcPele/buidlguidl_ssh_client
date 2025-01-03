@@ -222,7 +222,7 @@ export default function UbuntuSetup() {
         const result = await executeCommand(steps[i].command, "~/buidlguidl-client", address, sudoPassword);
         if (result.error) {
           setSteps(prevSteps => {
-            let innerStep: Step[] = prevSteps.map((step, index) =>
+            const innerStep: Step[] = prevSteps.map((step, index) =>
               index === i ? { ...step, status: "error", output: result.error } : step,
             );
             saveProgress(innerStep, i);
@@ -234,7 +234,7 @@ export default function UbuntuSetup() {
 
         // Update the current step as completed with its output
         setSteps(prevSteps => {
-          let innerStep: Step[] = prevSteps.map((step, index) =>
+          const innerStep: Step[] = prevSteps.map((step, index) =>
             index === i ? { ...step, status: "completed", output: result.output } : step,
           );
           saveProgress(innerStep, i);
@@ -242,7 +242,7 @@ export default function UbuntuSetup() {
         });
       } catch (error: any) {
         setSteps(prevSteps => {
-          let innerStep: Step[] = prevSteps.map((step, index) =>
+          const innerStep: Step[] = prevSteps.map((step, index) =>
             index === i ? { ...step, status: "error", output: error.message || "Command failed" } : step,
           );
           saveProgress(innerStep, i);

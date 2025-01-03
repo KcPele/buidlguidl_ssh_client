@@ -11,7 +11,7 @@ export default function MacSetup() {
             <FaApple className="w-16 h-16 md:w-20 md:h-20 text-secondary mb-4" />
             <h2 className="card-title text-2xl md:text-3xl mb-3">MacOS Support Coming Soon!</h2>
             <p className="text-sm md:text-base mb-4">
-              We're currently developing a native MacOS experience for node setup.
+              We&lsquo;re currently developing a native MacOS experience for node setup.
             </p>
             <div className="space-y-3 text-left w-full max-w-md">
               <h3 className="text-lg font-semibold">Planned features:</h3>

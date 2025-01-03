@@ -9,9 +9,10 @@ interface Step {
   status: "pending" | "running" | "completed" | "error";
   skip?: boolean;
 }
+
 const INITIAL_STEPS: Step[] = [
   {
-    command: "which pm2",
+    command: "pm2 --version",
     description: "Checking PM2 installation",
     status: "pending",
   },
@@ -20,7 +21,6 @@ const INITIAL_STEPS: Step[] = [
     description: "Installing PM2",
     status: "pending",
   },
-
   {
     command: "cd $DIRECTORY && pm2 start index.js",
     description: "Starting PM2 service",
@@ -38,6 +38,7 @@ const ExistingModal = ({
   const [directory, setDirectory] = useState("");
   const [steps, setSteps] = useState<Step[]>(INITIAL_STEPS);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isCompleted, setIsCompleted] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -75,28 +76,33 @@ const ExistingModal = ({
     setSteps(currentSteps => currentSteps.map((step, i) => (i === index ? { ...step, ...updates } : step)));
   };
 
+  const navigateToDashboard = () => {
+    router.push("/dashboard/setup/ubuntu");
+  };
+
   const processSteps = async () => {
     setIsProcessing(true);
+    setIsCompleted(false);
     let currentStep = 0;
 
     try {
-      // Check Node.js installation
+      // Check PM2 installation
       updateStepStatus(currentStep, { status: "running" });
       try {
-        const nodeCheck = await executeCommand(steps[currentStep].command);
-        updateStepStatus(currentStep, { status: "completed", output: nodeCheck.output });
+        const pm2Check = await executeCommand(steps[currentStep].command);
+        updateStepStatus(currentStep, { status: "completed", output: pm2Check.output });
         updateStepStatus(currentStep + 1, { status: "completed", skip: true });
-        currentStep = 2; // Skip Node.js installation
+        currentStep = 2; // Skip PM2 installation if already installed
       } catch (error) {
-        // Node.js not found, proceed with installation
-        updateStepStatus(currentStep, { status: "completed", output: "Node.js not found" });
+        // PM2 not found, proceed with installation
+        updateStepStatus(currentStep, { status: "completed", output: "PM2 not found" });
         currentStep++;
 
-        // Install Node.js
+        // Install PM2
         updateStepStatus(currentStep, { status: "running" });
         try {
-          const nodeInstall = await executeCommand(steps[currentStep].command);
-          updateStepStatus(currentStep, { status: "completed", output: nodeInstall.output });
+          const pm2Install = await executeCommand(steps[currentStep].command);
+          updateStepStatus(currentStep, { status: "completed", output: pm2Install.output });
         } catch (error) {
           updateStepStatus(currentStep, {
             status: "error",
@@ -107,12 +113,15 @@ const ExistingModal = ({
         currentStep++;
       }
 
-      // Install PM2
+      // Start PM2 service
       updateStepStatus(currentStep, { status: "running" });
       try {
-        const pm2Install = await executeCommand(steps[currentStep].command);
-        updateStepStatus(currentStep, { status: "completed", output: pm2Install.output });
-        currentStep++;
+        const startService = await executeCommand(steps[currentStep].command);
+        updateStepStatus(currentStep, { status: "completed", output: startService.output });
+
+        // Set completion state after all steps are successful
+        localStorage.setItem("buildguildExistingSetupCompleted", "true");
+        setIsCompleted(true);
       } catch (error) {
         updateStepStatus(currentStep, {
           status: "error",
@@ -120,26 +129,9 @@ const ExistingModal = ({
         });
         throw error;
       }
-
-      // Install PM2 logrotate
-      updateStepStatus(currentStep, { status: "running" });
-      try {
-        const logrotateInstall = await executeCommand(steps[currentStep].command);
-        updateStepStatus(currentStep, { status: "completed", output: logrotateInstall.output });
-      } catch (error) {
-        updateStepStatus(currentStep, {
-          status: "error",
-          output: error instanceof Error ? error.message : "Unknown error",
-        });
-        throw error;
-      }
-
-      // All steps completed successfully
-      setTimeout(() => {
-        router.push("/dashboard/setup/ubuntu");
-      }, 2000);
     } catch (error) {
       console.error("Error during setup:", error);
+      setIsCompleted(false);
     }
   };
 
@@ -187,6 +179,13 @@ const ExistingModal = ({
             {steps.map((step, index) => (
               <StepDisplay key={index} step={step} />
             ))}
+            {isCompleted && (
+              <div className="mt-6 flex justify-center">
+                <button className="btn btn-primary w-full md:w-auto" onClick={navigateToDashboard}>
+                  View Dashboard
+                </button>
+              </div>
+            )}
           </div>
         )}
       </div>

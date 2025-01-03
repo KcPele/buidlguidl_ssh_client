@@ -38,7 +38,7 @@ const ExistingModal = ({
   const router = useRouter();
   const { address } = useAccount();
   useEffect(() => {
-    const savedDirectory = localStorage.getItem("buildguildDirectory");
+    const savedDirectory = localStorage.getItem("buidlguidlDirectory");
     if (savedDirectory) {
       setDirectory(savedDirectory);
     }
@@ -110,7 +110,7 @@ const ExistingModal = ({
   const handleDirectorySubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const finalDirectory = directory.trim() || "~/buidlguidl-client";
-    localStorage.setItem("buildguildDirectory", finalDirectory);
+    localStorage.setItem("buidlguidlDirectory", finalDirectory);
     await processSteps();
   };
 

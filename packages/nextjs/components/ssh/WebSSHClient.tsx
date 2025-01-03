@@ -110,6 +110,8 @@ const WebSSHClient = () => {
     localStorage.removeItem("ssh_remember_me");
     setRememberMe(false);
     localStorage.removeItem("buidlguidlSetupCompleted");
+    localStorage.removeItem("buidlguidlDirectory");
+    localStorage.removeItem("setupProgress");
     setServerDetails({
       host: "",
       username: "",

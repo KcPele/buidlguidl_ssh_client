@@ -2,10 +2,12 @@ import { FiLock } from "react-icons/fi";
 
 const PasswordModal = ({
   isOpen,
+  value,
   onSubmit,
   onClose,
 }: {
   isOpen: boolean;
+  value: string;
   onSubmit: (password: string) => void;
   onClose: () => void;
 }) => (
@@ -31,6 +33,7 @@ const PasswordModal = ({
               className="input input-bordered pl-10 w-full"
               placeholder="Enter your sudo password"
               required
+              value={value}
             />
           </div>
           <label className="label">

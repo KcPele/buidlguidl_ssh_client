@@ -114,26 +114,60 @@ export default function UbuntuSetup() {
     {} as Record<string, Step[]>,
   );
 
-  // Load saved progress on mount
+  const loadSavedProgress = (): { steps: Step[]; currentStep: number } | null => {
+    try {
+      const savedProgress = localStorage.getItem("setupProgress");
+      return savedProgress ? JSON.parse(savedProgress) : null;
+    } catch (error) {
+      console.error("Error loading saved progress:", error);
+      return null;
+    }
+  };
+
+  const saveProgress = (updatedSteps: Step[], stepIndex: number) => {
+    try {
+      localStorage.setItem(
+        "setupProgress",
+        JSON.stringify({
+          steps: updatedSteps,
+          currentStep: stepIndex,
+        }),
+      );
+    } catch (error) {
+      console.error("Error saving progress:", error);
+    }
+  };
+
   useEffect(() => {
-    const savedProgress = localStorage.getItem("setupProgress");
+    const savedProgress = loadSavedProgress();
     if (savedProgress) {
-      const { steps: savedSteps, currentStep: savedCurrentStep } = JSON.parse(savedProgress);
-      setSteps(savedSteps);
+      const { steps: savedSteps, currentStep: savedCurrentStep } = savedProgress;
+
+      // Merge saved steps with initial steps
+      const restoredSteps = SETUP_STEPS.map((initialStep, index) => {
+        const savedStep = savedSteps[index];
+        if (savedStep) {
+          return {
+            ...initialStep,
+            status: savedStep.status,
+            output: savedStep.output,
+          };
+        }
+        return initialStep;
+      });
+
+      setSteps(restoredSteps);
       setCurrentStep(savedCurrentStep);
+
+      if (restoredSteps[savedCurrentStep]?.status === "error") {
+        setHasError(true);
+      }
+
+      if (restoredSteps[savedCurrentStep]?.status === "running") {
+        setIsRunning(true);
+      }
     }
   }, []);
-
-  // Save progress after each step
-  const saveProgress = (updatedSteps: Step[], stepIndex: number) => {
-    localStorage.setItem(
-      "setupProgress",
-      JSON.stringify({
-        steps: updatedSteps,
-        currentStep: stepIndex,
-      }),
-    );
-  };
 
   const handlePasswordSubmit = async (password: string) => {
     setPassword(password);
@@ -322,6 +356,7 @@ export default function UbuntuSetup() {
       <PasswordModal
         isOpen={isPasswordModalOpen}
         onSubmit={handlePasswordSubmit}
+        value={password}
         onClose={() => setIsPasswordModalOpen(false)}
       />
     </div>

@@ -43,7 +43,6 @@ export default function UbuntuSetup() {
   const [steps, setSteps] = useState<Step[]>(SETUP_STEPS);
   const [currentStep, setCurrentStep] = useState<number>(-1);
   const [isRunning, setIsRunning] = useState(false);
-  const [connectionDetails, setConnectionDetails] = useState<any>(null);
 
   useEffect(() => {
     const activeConnection = localStorage.getItem("active_ssh_connection");
@@ -51,18 +50,16 @@ export default function UbuntuSetup() {
       router.push("/");
       return;
     }
-    setConnectionDetails(JSON.parse(activeConnection));
   }, [router]);
 
   const executeCommand = async (command: string) => {
-    const response = await fetch("/api/commands", {
+    const response = await fetch("/api/ssh/execute", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
         command,
-        ...connectionDetails,
       }),
     });
 
@@ -102,8 +99,6 @@ export default function UbuntuSetup() {
 
     setIsRunning(false);
   };
-
-  if (!connectionDetails) return null;
 
   return (
     <div className="max-w-4xl mx-auto">

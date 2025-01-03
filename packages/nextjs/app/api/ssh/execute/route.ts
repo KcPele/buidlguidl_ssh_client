@@ -17,8 +17,7 @@ export async function POST(req: NextRequest) {
 
     const conn = await connectionManager.getConnection(sessionId);
 
-    // Wrap the command to source environment files and execute in the user's shell
-    const wrappedCommand = `/bin/bash -i -c "source ~/.bashrc && ${command}"`;
+    const wrappedCommand = `/bin/bash -i -c 'source ~/.bashrc 2>/dev/null; ${command}'`;
     console.log("Wrapped command:", wrappedCommand);
 
     const output = await new Promise<string>((resolve, reject) => {
@@ -46,7 +45,9 @@ export async function POST(req: NextRequest) {
 
         stream.on("close", () => {
           console.log("Stream closed. Output:", output, "Error:", errorOutput);
-          if (errorOutput && !output) {
+          if (command.includes("git clone") && errorOutput) {
+            resolve(output + errorOutput);
+          } else if (errorOutput && !output) {
             reject(new Error(errorOutput));
           } else {
             resolve(output || errorOutput);

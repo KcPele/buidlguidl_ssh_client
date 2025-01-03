@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import SetupProgress from "./SetupProgress";
 import StepIndicator from "./StepIndicator";
@@ -38,14 +38,15 @@ const SETUP_STEPS: Step[] = [
     category: "Node.js Setup",
     status: "pending",
   },
+  // {
+  //   command: "source ~/.bashrc",
+  //   description: "Loading NVM configuration",
+  //   category: "Node.js Setup",
+  //   status: "pending",
+
+  // },
   {
-    command: "source ~/.bashrc",
-    description: "Loading NVM configuration",
-    category: "Node.js Setup",
-    status: "pending",
-  },
-  {
-    command: "nvm install --lts",
+    command: " nvm install --lts",
     description: "Installing Node.js LTS",
     category: "Node.js Setup",
     status: "pending",
@@ -197,6 +198,9 @@ export default function UbuntuSetup() {
       );
 
       try {
+        if (steps[i].skip) {
+          continue;
+        }
         const result = await executeCommand(steps[i].command, "~/buidlguidl-client", address, sudoPassword);
         if (result.error) {
           setSteps(prevSteps => {
@@ -235,6 +239,7 @@ export default function UbuntuSetup() {
     if (!hasError && currentStep === steps.length - 1) {
       localStorage.removeItem("setupProgress"); // Clear progress on successful completion
       localStorage.setItem("buidlguidlSetupCompleted", "true");
+      localStorage.setItem("buidlguidlDirectory", "~/buidlguidl-client");
     }
   };
 

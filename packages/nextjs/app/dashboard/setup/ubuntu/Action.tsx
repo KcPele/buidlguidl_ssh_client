@@ -53,7 +53,7 @@ const Action = () => {
 
   const processSteps = async (steps: Step[]) => {
     setIsCompleted(false);
-    const directory = localStorage.getItem("buildguildDirectory") || "~/buidlguidl-client";
+    const directory = localStorage.getItem("buidlguidlDirectory") || "~/buidlguidl-client";
     let currentStep = 0;
 
     try {
@@ -98,7 +98,10 @@ const Action = () => {
         steps = [...SHUTDOWN_STEPS];
         title = "Shutting Down";
         localStorage.removeItem("buidlguidlSetupCompleted");
-        router.push("/dashboard");
+        //dont redirect immedately
+        setTimeout(() => {
+          router.push("/dashboard");
+        }, 1000);
         break;
     }
 

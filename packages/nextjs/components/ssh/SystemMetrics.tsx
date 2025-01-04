@@ -142,7 +142,7 @@ const SystemMonitor = () => {
           ))}
         </div>
       ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
           <div className="bg-white p-4 rounded-lg shadow-sm">
             <h3 className="text-lg font-medium mb-4">Disk Usage</h3>
             <ResponsiveContainer width="100%" height={200}>

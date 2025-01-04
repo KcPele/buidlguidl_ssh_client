@@ -4,6 +4,32 @@ import { connectionManager } from "../../lib/connectionManager";
 interface ExecuteCommandRequest {
   command: string;
 }
+function parseErrorMessage(error: unknown): string {
+  const errorString = String(error);
+
+  // Check if it's a bash error
+  if (errorString.includes("bash:")) {
+    // Split by "bash:" and take the last meaningful error
+    const parts = errorString.split("bash:");
+    const lastPart = parts[parts.length - 1].trim();
+
+    // Look for common command-not-found pattern
+    if (lastPart.includes("Command '") && lastPart.includes("not found")) {
+      return lastPart.trim();
+    }
+
+    // For other bash errors, remove common noise
+    const cleanedError = lastPart
+      .replace(/cannot set terminal process group.*?device/g, "")
+      .replace(/no job control in this shell/g, "")
+      .trim();
+
+    return cleanedError || lastPart;
+  }
+
+  // For non-bash errors, return the original message
+  return errorString;
+}
 
 export async function POST(req: NextRequest) {
   try {
@@ -56,16 +82,9 @@ export async function POST(req: NextRequest) {
     });
 
     return NextResponse.json({ output });
+    // Usage in your error handler:
   } catch (error) {
-    // console.error("Command execution error:", error);
-    return NextResponse.json(
-      {
-        error: "Command execution failed",
-        message: error instanceof Error ? error.message : "Unknown error",
-      },
-      {
-        status: 500,
-      },
-    );
+    const parsedMessage = parseErrorMessage(error);
+    return NextResponse.json({ message: parsedMessage }, { status: 500 });
   }
 }

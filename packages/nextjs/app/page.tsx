@@ -353,27 +353,29 @@ export default function LandingPage() {
                       <CheckCircle
                         className={`w-6 h-6 ${step.isCompleted ? "text-success" : "text-base-content/30"}`}
                       />
-                      <div className="flex-1">
-                        <h3 className="font-bold">{step.title}</h3>
-                        <div className="mt-2 space-y-1">
-                          {step.commands.map((command, idx) => (
-                            <code key={idx} className="block text-sm bg-base-300 p-2 rounded">
-                              {command}
-                            </code>
-                          ))}
+                      <div className="flex flex-1 gap-3 flex-col sm:flex-row sm:items-center">
+                        <div className="flex-1">
+                          <h3 className="font-bold">{step.title}</h3>
+                          <div className="mt-2 space-y-1">
+                            {step.commands.map((command, idx) => (
+                              <code key={idx} className="block text-sm bg-base-300 p-2 rounded">
+                                {command}
+                              </code>
+                            ))}
+                          </div>
                         </div>
+                        <span
+                          className={`badge ${
+                            step.status === "completed"
+                              ? "badge-success"
+                              : step.status === "in-progress"
+                                ? "badge-primary"
+                                : "badge-ghost"
+                          }`}
+                        >
+                          {step.status}
+                        </span>
                       </div>
-                      <span
-                        className={`badge ${
-                          step.status === "completed"
-                            ? "badge-success"
-                            : step.status === "in-progress"
-                              ? "badge-primary"
-                              : "badge-ghost"
-                        }`}
-                      >
-                        {step.status}
-                      </span>
                     </div>
                   </div>
                 </motion.div>

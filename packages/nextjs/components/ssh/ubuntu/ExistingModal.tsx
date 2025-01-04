@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import StepDisplay from "./StepDisplay";
 import { useAccount } from "wagmi";
-import { BUIDLGUIDL_DIRECTORY_KEY, SETUP_COMPLETED_KEY, executeCommand } from "~~/lib/helper";
+import { BUIDLGUIDL_DIRECTORY_KEY, DEFAULT_DIRECTORY, SETUP_COMPLETED_KEY, executeCommand } from "~~/lib/helper";
 import { Step } from "~~/types/ssh/step";
 
 const INITIAL_STEPS: Step[] = [
@@ -109,7 +109,7 @@ const ExistingModal = ({
 
   const handleDirectorySubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const finalDirectory = directory.trim() || "~/buidlguidl-client";
+    const finalDirectory = directory.trim() || DEFAULT_DIRECTORY;
     localStorage.setItem(BUIDLGUIDL_DIRECTORY_KEY, finalDirectory);
     await processSteps();
   };
@@ -126,9 +126,11 @@ const ExistingModal = ({
               </label>
               <input
                 type="text"
-                placeholder="~/buidlguidl-client/"
+                placeholder="~/buidlguidl-client"
                 className="input input-bordered w-full"
                 value={directory}
+                //validate if directory is valid. it should always start with ~/ and do not end with /
+
                 onChange={e => setDirectory(e.target.value)}
               />
               <label className="label">

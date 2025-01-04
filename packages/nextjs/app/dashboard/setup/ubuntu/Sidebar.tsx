@@ -1,6 +1,6 @@
 import React from "react";
 import Action from "./Action";
-import { FaChartBar, FaFileAlt, FaTerminal } from "react-icons/fa";
+import { FaChartBar, FaChartLine, FaFileAlt, FaTerminal } from "react-icons/fa";
 
 interface SidebarProps {
   activeSection: string;
@@ -22,6 +22,15 @@ export const Sidebar = ({ activeSection, setActiveSection }: SidebarProps) => {
             >
               <FaChartBar className="text-lg" />
               <span className="hidden md:block">Node Monitor</span>
+            </button>
+            <button
+              onClick={() => setActiveSection("system-metrics")}
+              className={`flex items-center space-x-2 p-2 rounded hover:bg-gray-700 transition-colors ${
+                activeSection === "system-metrics" ? "bg-gray-700" : ""
+              }`}
+            >
+              <FaChartLine className="text-lg" />
+              <span className="hidden md:block">System Metrics</span>
             </button>
             <button
               onClick={() => setActiveSection("reth-logs")}

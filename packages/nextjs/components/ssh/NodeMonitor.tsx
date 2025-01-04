@@ -51,7 +51,7 @@ export function NodeMonitor() {
 
       return res.json();
     },
-    refetchInterval: 8000,
+    refetchInterval: 5000,
   });
 
   useEffect(() => {

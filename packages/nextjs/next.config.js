@@ -10,7 +10,14 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
   webpack: (config, { isServer }) => {
-    config.resolve.fallback = { fs: false, net: false, tls: false };
+    config.resolve.fallback = {
+      fs: false,
+      net: false,
+      tls: false,
+      stream: require.resolve("stream-browserify"),
+      dns: false,
+      crypto: require.resolve("crypto-browserify"),
+    };
     config.externals.push("pino-pretty", "lokijs", "encoding");
     if (isServer) {
       config.externals.push("ssh2"); // Exclude `ssh2` from the server bundle
@@ -18,7 +25,6 @@ const nextConfig = {
 
     return config;
   },
-  output: "export",
 };
 
 module.exports = nextConfig;

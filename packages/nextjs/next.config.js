@@ -9,9 +9,12 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-  webpack: config => {
+  webpack: (config, { isServer }) => {
     config.resolve.fallback = { fs: false, net: false, tls: false };
     config.externals.push("pino-pretty", "lokijs", "encoding");
+    if (isServer) {
+      config.externals.push("ssh2"); // Exclude `ssh2` from the server bundle
+    }
 
     return config;
   },

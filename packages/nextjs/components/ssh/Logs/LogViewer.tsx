@@ -83,7 +83,7 @@ export function LogViewer({ url, title }: { url: string; title: string }) {
 
   return (
     <div className="flex flex-col gap-4">
-      <ParsedLogView parsedLogs={parsedLogs} />
+      {parsedLogs.length > 0 && <ParsedLogView parsedLogs={parsedLogs} />}
       <div className="bg-white rounded-lg shadow-md p-6 w-full">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-semibold">{title}</h2>

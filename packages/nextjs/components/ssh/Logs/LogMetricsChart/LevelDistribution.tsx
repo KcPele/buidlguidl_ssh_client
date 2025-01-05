@@ -2,7 +2,7 @@ import React, { useMemo } from "react";
 import { Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 import { ParsedLog } from "~~/types/ssh/lighthouse";
 
-const COLORS = ["#36A2EB", "#FF6384", "#4BC0C0", "#FF9F40", "#9966FF"];
+const COLORS = ["#36A2EB", "#FF9F40", "#FF6384"];
 
 const LevelDistribution = React.memo(({ parsedLogs }: { parsedLogs: ParsedLog[] }) => {
   const levelData = useMemo(() => {
@@ -27,7 +27,7 @@ const LevelDistribution = React.memo(({ parsedLogs }: { parsedLogs: ParsedLog[] 
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie
-                data={levelData}
+                data={levelData.slice(0, 3)}
                 dataKey="value"
                 nameKey="name"
                 cx="50%"

@@ -4,7 +4,6 @@ import LevelDistribution from "./LogMetricsChart/LevelDistribution";
 import NetworkHealthMetrics from "./LogMetricsChart/NetworkHealthMetrics";
 import NewEpochAnalysis from "./LogMetricsChart/NewEpochAnalysis";
 import ServiceDistribution from "./LogMetricsChart/ServiceDistribution";
-import SlotProgressAnalysis from "./LogMetricsChart/SlotProgressAnalysis";
 import TimingMetrics from "./LogMetricsChart/TimingMetrics";
 import { ParsedLog } from "~~/types/ssh/lighthouse";
 
@@ -15,7 +14,7 @@ const ParsedLogView = memo(({ parsedLogs }: { parsedLogs: ParsedLog[] }) => (
       <ServiceDistribution parsedLogs={parsedLogs} />
       <TimingMetrics parsedLogs={parsedLogs} />
       <NewEpochAnalysis parsedLogs={parsedLogs} />
-      <SlotProgressAnalysis parsedLogs={parsedLogs} />
+      {/* <SlotProgressAnalysis parsedLogs={parsedLogs} /> */}
 
       <NetworkHealthMetrics parsedLogs={parsedLogs} />
       <ConnectedPeers parsedLogs={parsedLogs} />

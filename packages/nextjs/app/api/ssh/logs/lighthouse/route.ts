@@ -48,7 +48,7 @@ export async function GET(req: NextRequest) {
     // console.log(parsedLogs);
     return NextResponse.json({
       logs: Array.isArray(logs) ? logs : [],
-      parsedLogs,
+      parsedLogs: Array.isArray(parsedLogs) ? parsedLogs : [],
     });
   } catch (error) {
     console.error("Log fetching error:", error);

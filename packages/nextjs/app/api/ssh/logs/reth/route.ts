@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectionManager } from "~~/app/api/lib/connectionManager";
-import { parseLogLine } from "~~/app/api/lib/utils";
+// import { parseLogLine } from "~~/app/api/lib/utils";
 import { DEFAULT_DIRECTORY } from "~~/lib/helper";
 
 export async function GET(req: NextRequest) {

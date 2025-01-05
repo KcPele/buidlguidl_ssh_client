@@ -255,8 +255,8 @@ export default function UbuntuSetup() {
 
     setIsRunning(false);
 
-    if (!hasError && innerCurrentStep === steps.length - 1) {
-      localStorage.removeItem(SETUP_PROGRESS_KEY); // Clear progress on successful completion
+    if (!hasError) {
+      // localStorage.removeItem(SETUP_PROGRESS_KEY); // Clear progress on successful completion
       console.log("Setting setup completed to true");
       localStorage.setItem(SETUP_COMPLETED_KEY, "true");
       localStorage.setItem(BUIDLGUIDL_DIRECTORY_KEY, DEFAULT_DIRECTORY);

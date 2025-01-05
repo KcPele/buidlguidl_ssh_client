@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectionManager } from "../../lib/connectionManager";
+import { parseErrorMessage } from "../../lib/utils";
 
 export async function POST(req: NextRequest) {
   try {
@@ -32,12 +33,11 @@ export async function POST(req: NextRequest) {
 
     return apiResponse;
   } catch (error) {
-    console.error("SSH connection error:", error);
     return NextResponse.json(
       {
         success: false,
         error: "Connection failed",
-        message: error instanceof Error ? error.message : "Unknown error",
+        message: error instanceof Error ? parseErrorMessage(error.message) : "Unknown error",
       },
       { status: 500 },
     );

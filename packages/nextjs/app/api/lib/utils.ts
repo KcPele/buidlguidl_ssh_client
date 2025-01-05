@@ -7,6 +7,33 @@ interface ParsedLog {
   raw?: string;
 }
 
+export function parseErrorMessage(error: unknown): string {
+  const errorString = String(error);
+
+  // Check if it's a bash error
+  if (errorString.includes("bash:")) {
+    // Split by "bash:" and take the last meaningful error
+    const parts = errorString.split("bash:");
+    const lastPart = parts[parts.length - 1].trim();
+
+    // Look for common command-not-found pattern
+    if (lastPart.includes("Command '") && lastPart.includes("not found")) {
+      return lastPart.trim();
+    }
+
+    // For other bash errors, remove common noise
+    const cleanedError = lastPart
+      .replace(/cannot set terminal process group.*?device/g, "")
+      .replace(/no job control in this shell/g, "")
+      .trim();
+
+    return cleanedError || lastPart;
+  }
+
+  // For non-bash errors, return the original message
+  return errorString;
+}
+
 export function parseLogLine(line: string): ParsedLog {
   const patterns = [
     // Standard format with service at end

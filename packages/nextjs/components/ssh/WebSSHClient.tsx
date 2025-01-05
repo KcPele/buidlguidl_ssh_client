@@ -87,9 +87,8 @@ const WebSSHClient = () => {
       });
 
       const data = await response.json();
-
       if (!response.ok) {
-        throw new Error(data.error || "Failed to connect");
+        throw new Error(data.message || "Failed to connect");
       }
 
       setOutput(data);
@@ -115,6 +114,7 @@ const WebSSHClient = () => {
   };
 
   const handleClearSavedData = () => {
+    setError("");
     localStorage.removeItem(SERVER_DETAILS_KEY);
     localStorage.removeItem(SSH_REMEMBER_ME_KEY);
     setRememberMe(false);

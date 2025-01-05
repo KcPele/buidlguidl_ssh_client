@@ -219,7 +219,7 @@ export default function UbuntuSetup() {
         if (steps[i].skip) {
           continue;
         }
-        const result = await executeCommand(steps[i].command, "~/buidlguidl-client", address, sudoPassword);
+        const result = await executeCommand(steps[i].command, DEFAULT_DIRECTORY, address, sudoPassword);
         if (result.error) {
           setSteps(prevSteps => {
             const innerStep: Step[] = prevSteps.map((step, index) =>
@@ -238,9 +238,11 @@ export default function UbuntuSetup() {
             index === i ? { ...step, status: "completed", output: result.output } : step,
           );
           saveProgress(innerStep, i);
+
           return innerStep;
         });
       } catch (error: any) {
+        console.log("new setup error", error);
         setSteps(prevSteps => {
           const innerStep: Step[] = prevSteps.map((step, index) =>
             index === i ? { ...step, status: "error", output: error.message || "Command failed" } : step,
@@ -254,14 +256,16 @@ export default function UbuntuSetup() {
     }
 
     setIsRunning(false);
+  };
 
-    if (!hasError) {
+  useEffect(() => {
+    if (!hasError && steps[steps.length - 1]?.status === "completed") {
       // localStorage.removeItem(SETUP_PROGRESS_KEY); // Clear progress on successful completion
       console.log("Setting setup completed to true");
       localStorage.setItem(SETUP_COMPLETED_KEY, "true");
       localStorage.setItem(BUIDLGUIDL_DIRECTORY_KEY, DEFAULT_DIRECTORY);
     }
-  };
+  }, [steps, hasError]);
 
   const initiateSetup = () => {
     setIsPasswordModalOpen(true);

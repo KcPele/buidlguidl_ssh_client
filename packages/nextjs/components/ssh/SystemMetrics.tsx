@@ -85,7 +85,6 @@ const SystemMonitor = () => {
   }
 
   useEffect(() => {
-    console.log("data", data);
     if (data) {
       setMetrics(prev => [...prev, data].slice(-30));
     }

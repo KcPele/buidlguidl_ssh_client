@@ -49,6 +49,7 @@ export function LogViewer({ url, title }: { url: string; title: string }) {
 
   useEffect(() => {
     if (data) {
+      console.log(data.parsedLogs);
       if (data.logs && Array.isArray(data.logs)) {
         const parsedLogs = data.logs.map((logLine: string) => {
           const levelMatch = logLine.match(/INFO|WARN|ERROR|DEBG|CRIT|TRACE/);

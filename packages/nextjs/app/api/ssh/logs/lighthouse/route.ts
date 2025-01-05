@@ -42,7 +42,8 @@ export async function GET(req: NextRequest) {
         });
       });
     });
-    const logs = output.split("\n").filter(line => line.trim()); // Remove empty lines
+    const logs = output.split("\n").filter(line => line.trim());
+    // console.log(logs);
     const parsedLogs = logs.map(line => parseLogLine(line)); //
     // console.log(parsedLogs);
     return NextResponse.json({

@@ -1,13 +1,21 @@
 import "@rainbow-me/rainbowkit/styles.css";
+import { Metadata } from "next";
 import { ScaffoldEthAppWithProviders } from "~~/components/ScaffoldEthAppWithProviders";
 import { ThemeProvider } from "~~/components/ThemeProvider";
 import "~~/styles/globals.css";
-import { getMetadata } from "~~/utils/scaffold-eth/getMetadata";
 
-export const metadata = getMetadata({
-  title: "BuildGuild Web Node Client",
-  description: "BuildGuild Web Node client: Ssh into your node",
-});
+export const metadata: Metadata = {
+  title: "BuidlGuidl Node Manager",
+  description:
+    "Professional node management with real-time monitoring, secure SSH access, and automated deployment for Ethereum nodes",
+  keywords: ["ethereum", "node management", "SSH", "monitoring", "blockchain", "BuidlGuidl"],
+  openGraph: {
+    title: "BuidlGuidl Node Manager",
+    description: "Advanced node management with real-time analytics",
+    type: "website",
+  },
+  robots: "index, follow",
+};
 
 const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
   return (

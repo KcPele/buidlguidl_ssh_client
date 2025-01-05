@@ -7,7 +7,7 @@ export async function GET(req: NextRequest) {
   try {
     const sessionId = req.cookies.get("ssh_session")?.value;
     if (!sessionId) {
-      throw new Error("No active session");
+      throw new Error("No active session login first");
     }
     const { searchParams } = new URL(req.url);
     const directory = searchParams.get("directory") || DEFAULT_DIRECTORY;

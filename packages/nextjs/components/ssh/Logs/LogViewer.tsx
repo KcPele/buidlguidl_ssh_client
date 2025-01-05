@@ -35,7 +35,7 @@ export function LogViewer({ url, title }: { url: string; title: string }) {
   const [parsedLogs, setParsedLogs] = useState<ParsedLog[]>([]);
   const [filter, setFilter] = useState<"all" | "info" | "warn" | "error">("all");
   const logContainerRef = useRef<HTMLDivElement>(null);
-  const { data, isLoading, error, isError, isFetching } = useQuery({
+  const { data, isLoading, error, isError } = useQuery({
     queryKey: ["logs", url],
     queryFn: async () => {
       const directory = localStorage.getItem(BUIDLGUIDL_DIRECTORY_KEY) || "";
@@ -69,7 +69,7 @@ export function LogViewer({ url, title }: { url: string; title: string }) {
         logContainerRef.current.scrollTop = logContainerRef.current.scrollHeight;
       }
     }
-  }, [data, isError, error, isFetching]);
+  }, [data, isError, error]);
 
   const filteredLogs = logs.filter(log => (filter === "all" ? true : log.level === filter));
 

@@ -16,7 +16,8 @@ const LevelDistribution = React.memo(({ parsedLogs }: { parsedLogs: ParsedLog[] 
 
     return Object.entries(levelCounts)
       .map(([name, value]) => ({ name, value }))
-      .sort((a, b) => b.value - a.value);
+      .sort((a, b) => b.value - a.value)
+      .filter(item => item.name !== "undefined");
   }, [parsedLogs]);
 
   return (
@@ -27,7 +28,7 @@ const LevelDistribution = React.memo(({ parsedLogs }: { parsedLogs: ParsedLog[] 
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie
-                data={levelData.slice(0, 3)}
+                data={levelData}
                 dataKey="value"
                 nameKey="name"
                 cx="50%"

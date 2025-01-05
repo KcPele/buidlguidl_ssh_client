@@ -19,7 +19,7 @@ const UPDATE_STEPS: Step[] = [
     status: "pending",
   },
   {
-    command: "cd $DIRECTORY && pm2 restart all",
+    command: "cd $DIRECTORY && pm2 restart all --update-env",
     description: "Restarting the service",
     status: "pending",
   },
@@ -27,7 +27,7 @@ const UPDATE_STEPS: Step[] = [
 
 const RESTART_STEPS: Step[] = [
   {
-    command: "cd $DIRECTORY && pm2 restart all",
+    command: "cd $DIRECTORY && pm2 restart all --update-env",
     description: "Restarting the service",
     status: "pending",
   },

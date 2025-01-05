@@ -11,7 +11,8 @@ const ServiceDistribution = React.memo(({ parsedLogs }: { parsedLogs: ParsedLog[
 
     return Object.entries(serviceCounts)
       .map(([name, value]) => ({ name, value }))
-      .sort((a, b) => b.value - a.value);
+      .sort((a, b) => b.value - a.value)
+      .filter(item => item.name !== "undefined");
   }, [parsedLogs]);
 
   return (

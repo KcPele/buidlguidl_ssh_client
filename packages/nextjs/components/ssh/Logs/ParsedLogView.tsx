@@ -12,12 +12,11 @@ const ParsedLogView = memo(({ parsedLogs }: { parsedLogs: ParsedLog[] }) => (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       <LevelDistribution parsedLogs={parsedLogs} />
       <ServiceDistribution parsedLogs={parsedLogs} />
+      <NetworkHealthMetrics parsedLogs={parsedLogs} />
+      <ConnectedPeers parsedLogs={parsedLogs} />
       <TimingMetrics parsedLogs={parsedLogs} />
       <NewEpochAnalysis parsedLogs={parsedLogs} />
       {/* <SlotProgressAnalysis parsedLogs={parsedLogs} /> */}
-
-      <NetworkHealthMetrics parsedLogs={parsedLogs} />
-      <ConnectedPeers parsedLogs={parsedLogs} />
     </div>
   </div>
 ));

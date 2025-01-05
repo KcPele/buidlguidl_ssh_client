@@ -221,6 +221,7 @@ export default function UbuntuSetup() {
         }
         const result = await executeCommand(steps[i].command, DEFAULT_DIRECTORY, address, sudoPassword);
         if (result.error) {
+          console.log("new setup error", result.error);
           setSteps(prevSteps => {
             const innerStep: Step[] = prevSteps.map((step, index) =>
               index === i ? { ...step, status: "error", output: result.error } : step,

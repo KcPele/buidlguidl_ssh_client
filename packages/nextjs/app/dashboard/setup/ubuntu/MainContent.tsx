@@ -1,5 +1,5 @@
 import React from "react";
-import { LogViewer } from "~~/components/ssh/LogViewer";
+import { LogViewer } from "~~/components/ssh/Logs/LogViewer";
 import { NodeMonitor } from "~~/components/ssh/NodeMonitor";
 import SystemMetrics from "~~/components/ssh/SystemMetrics";
 import Terminal from "~~/components/ssh/Terminal";

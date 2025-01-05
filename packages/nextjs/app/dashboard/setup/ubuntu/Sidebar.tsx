@@ -9,10 +9,10 @@ interface SidebarProps {
 
 export const Sidebar = ({ activeSection, setActiveSection }: SidebarProps) => {
   return (
-    <aside className="md:w-64 w-20 bg-gray-800 text-white flex-shrink-0">
+    <aside className="xl:w-64 w-20 bg-gray-800 text-white flex-shrink-0">
       <div className="h-full flex flex-col justify-between p-4">
         <div>
-          <h2 className="text-xl font-bold mb-4 hidden md:block">Navigation</h2>
+          <h2 className="text-xl font-bold mb-4 hidden xl:block">Navigation</h2>
           <nav className="flex flex-col space-y-2">
             <button
               onClick={() => setActiveSection("node-monitor")}
@@ -21,7 +21,7 @@ export const Sidebar = ({ activeSection, setActiveSection }: SidebarProps) => {
               }`}
             >
               <FaChartBar className="text-lg" />
-              <span className="hidden md:block">Node Monitor</span>
+              <span className="hidden xl:block">Node Monitor</span>
             </button>
             <button
               onClick={() => setActiveSection("system-metrics")}
@@ -30,7 +30,7 @@ export const Sidebar = ({ activeSection, setActiveSection }: SidebarProps) => {
               }`}
             >
               <FaChartLine className="text-lg" />
-              <span className="hidden md:block">System Metrics</span>
+              <span className="hidden xl:block">System Metrics</span>
             </button>
             <button
               onClick={() => setActiveSection("reth-logs")}
@@ -39,7 +39,7 @@ export const Sidebar = ({ activeSection, setActiveSection }: SidebarProps) => {
               }`}
             >
               <FaFileAlt className="text-lg" />
-              <span className="hidden md:block">Reth Logs</span>
+              <span className="hidden xl:block">Reth Logs</span>
             </button>
             <button
               onClick={() => setActiveSection("lighthouse-logs")}
@@ -48,7 +48,7 @@ export const Sidebar = ({ activeSection, setActiveSection }: SidebarProps) => {
               }`}
             >
               <FaFileAlt className="text-lg" />
-              <span className="hidden md:block">Lighthouse Logs</span>
+              <span className="hidden xl:block">Lighthouse Logs</span>
             </button>
             <button
               onClick={() => setActiveSection("terminal")}
@@ -57,7 +57,7 @@ export const Sidebar = ({ activeSection, setActiveSection }: SidebarProps) => {
               }`}
             >
               <FaTerminal className="text-lg" />
-              <span className="hidden md:block">Terminal</span>
+              <span className="hidden xl:block">Terminal</span>
             </button>
           </nav>
         </div>

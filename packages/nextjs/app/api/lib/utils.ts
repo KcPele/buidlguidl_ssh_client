@@ -8,11 +8,10 @@ interface ParsedLog {
 }
 
 export function parseLogLine(line: string): ParsedLog {
-  // Handle different log patterns
   const patterns = [
-    // Pattern 1: Standard lighthouse log format
-    /^(?<timestamp>\w{3} \d{2} \d{2}:\d{2}:\d{2}\.\d{3})\s+(?<level>[A-Z]+)\s+(?<message>.*?)\s+service:\s*(?<service>[\w-]+)/,
-    // Pattern 2: Alternative format with bracketed service
+    // Standard format with service at end
+    /^(?<timestamp>\w{3} \d{2} \d{2}:\d{2}:\d{2}\.\d{3})\s+(?<level>[A-Z]+)\s+(?<message>.*?)(?:,\s+)?service:\s*(?<service>[\w-]+)(?:,\s+service:\s*[\w-]+)*\r?$/,
+    // Format with bracketed service
     /^(?<timestamp>\w{3} \d{2} \d{2}:\d{2}:\d{2}\.\d{3})\s+(?<level>[A-Z]+)\s+\[(?<service>[\w-]+)\]\s+(?<message>.*)/,
   ];
 
@@ -28,22 +27,24 @@ export function parseLogLine(line: string): ParsedLog {
 
   const { timestamp, level, message, service } = match.groups;
 
-  // Extract metadata with improved pattern matching
+  // Extract metadata with support for more value formats
   const metadata: Record<string, string> = {};
-  const metadataPattern = /(?<key>\w+):\s*(?<value>[^\s,]+)(?=[,\s]|$)/g;
+  const metadataPattern = /(?<key>\w+):\s*(?<value>(?:"[^"]*")|(?:\[[^\]]*\])|[^\s,]+)(?=[,\s]|$)/g;
   let metadataMatch;
 
   while ((metadataMatch = metadataPattern.exec(message)) !== null) {
     const { key, value } = metadataMatch.groups!;
     if (key && value && key !== "service") {
-      metadata[key] = value;
+      // Clean up quoted values and arrays
+      metadata[key] = value.replace(/^["[]|[\]"]$/g, "");
     }
   }
 
-  // Clean message by removing metadata key-value pairs
+  // Clean message by removing metadata and extra whitespace
   const cleanMessage = message
-    .replace(/\s*\w+:\s*[^\s,]+(?=[,\s]|$)/g, "")
+    .replace(/\s*\w+:\s*(?:"[^"]*"|[^\s,]+)(?=[,\s]|$)/g, "")
     .replace(/\s+/g, " ")
+    .replace(/,\s*$/, "")
     .trim();
 
   return {

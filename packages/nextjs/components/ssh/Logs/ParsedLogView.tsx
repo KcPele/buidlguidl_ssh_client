@@ -46,6 +46,7 @@ const ParsedLogView = ({ parsedLogs }: { parsedLogs: ParsedLog[] }) => {
       }))
       .filter(entry => !Object.values(entry).some(val => isNaN(val)));
 
+    console.log(timingData);
     // New - Epoch Analysis
     const epochData = parsedLogs
       .filter(log => log.metadata?.our_finalized_epoch && log.metadata?.their_finalized_epoch)
@@ -102,9 +103,7 @@ const ParsedLogView = ({ parsedLogs }: { parsedLogs: ParsedLog[] }) => {
     };
   }, [parsedLogs]);
   return (
-    <div className="p-6 space-y-8 bg-base-200 min-h-screen">
-      <h2 className="text-2xl font-bold text-center mb-6">Lighthouse Node Metrics</h2>
-
+    <div className=" bg-base-200">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Existing charts */}
         <div className="card bg-base-100 shadow-xl">

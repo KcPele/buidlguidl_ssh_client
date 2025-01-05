@@ -61,6 +61,9 @@ const Action = () => {
         updateStepStatus(currentStep, { status: "running" });
         try {
           const result = await executeCommand(step.command, directory);
+          if (result.error) {
+            throw new Error(result.error);
+          }
           updateStepStatus(currentStep, {
             status: "completed",
             output: result.output,

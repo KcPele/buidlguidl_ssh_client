@@ -39,9 +39,7 @@ const ExistingModal = ({
   const { address } = useAccount();
   useEffect(() => {
     const savedDirectory = localStorage.getItem(BUIDLGUIDL_DIRECTORY_KEY);
-    if (savedDirectory) {
-      setDirectory(savedDirectory);
-    }
+    setDirectory(savedDirectory || DEFAULT_DIRECTORY);
   }, []);
 
   const updateStepStatus = (index: number, updates: Partial<Step>) => {
@@ -62,6 +60,9 @@ const ExistingModal = ({
       updateStepStatus(currentStep, { status: "running" });
       try {
         const pm2Check = await executeCommand(steps[currentStep].command, directory);
+        if (pm2Check.error) {
+          throw new Error(pm2Check.error);
+        }
         updateStepStatus(currentStep, { status: "completed", output: pm2Check.output });
         updateStepStatus(currentStep + 1, { status: "completed", skip: true });
         currentStep = 2; // Skip PM2 installation if already installed
@@ -74,6 +75,9 @@ const ExistingModal = ({
         updateStepStatus(currentStep, { status: "running" });
         try {
           const pm2Install = await executeCommand(steps[currentStep].command, directory);
+          if (pm2Install.error) {
+            throw new Error(pm2Install.error);
+          }
           updateStepStatus(currentStep, { status: "completed", output: pm2Install.output });
         } catch (error) {
           updateStepStatus(currentStep, {
@@ -89,6 +93,9 @@ const ExistingModal = ({
       updateStepStatus(currentStep, { status: "running" });
       try {
         const startService = await executeCommand(steps[currentStep].command, directory, address);
+        if (startService.error) {
+          throw new Error(startService.error);
+        }
         updateStepStatus(currentStep, { status: "completed", output: startService.output });
 
         // Set completion state after all steps are successful

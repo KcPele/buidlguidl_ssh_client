@@ -7,7 +7,12 @@ export const SETUP_PROGRESS_KEY = "setupProgress";
 export const SSH_REMEMBER_ME_KEY = "ssh_remember_me";
 export const DEFAULT_DIRECTORY = "~/buidlguidl-client";
 
-export const executeCommand = async (command: string, directory: string, address?: string, password?: string) => {
+export const executeCommand = async (
+  command: string,
+  directory: string,
+  address?: string,
+  password?: string,
+): Promise<{ output?: any; error?: string }> => {
   const actualCommand = command
     .replace("$DIRECTORY", directory)
     .replace("$ADDRESS", address || "")
@@ -24,13 +29,12 @@ export const executeCommand = async (command: string, directory: string, address
       }),
     });
     const data = await response.json();
-
-    if (data.error) {
+    if (response.status !== 200) {
       throw new Error(data.message || "Command execution failed");
     }
 
     return data;
   } catch (error) {
-    throw error;
+    return { error: (error as Error).message };
   }
 };

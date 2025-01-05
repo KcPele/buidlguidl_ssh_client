@@ -196,9 +196,7 @@ export default function UbuntuSetup() {
 
     // Start from the last successful step or the beginning
     const startIndex = Math.max(currentStep, 0);
-    let innerCurrentStep = currentStep;
     for (let i = startIndex; i < steps.length; i++) {
-      innerCurrentStep = i;
       setCurrentStep(i);
 
       // Update current step to running while keeping previous steps' states
@@ -220,20 +218,10 @@ export default function UbuntuSetup() {
           continue;
         }
         const result = await executeCommand(steps[i].command, DEFAULT_DIRECTORY, address, sudoPassword);
-        if (result.error) {
-          console.log("new setup error", result.error);
-          setSteps(prevSteps => {
-            const innerStep: Step[] = prevSteps.map((step, index) =>
-              index === i ? { ...step, status: "error", output: result.error } : step,
-            );
-            saveProgress(innerStep, i);
-            return innerStep;
-          });
-          setHasError(true);
-          break;
-        }
-
         // Update the current step as completed with its output
+        if (result.error) {
+          throw new Error(result.error);
+        }
         setSteps(prevSteps => {
           const innerStep: Step[] = prevSteps.map((step, index) =>
             index === i ? { ...step, status: "completed", output: result.output } : step,
@@ -261,7 +249,7 @@ export default function UbuntuSetup() {
 
   useEffect(() => {
     if (!hasError && steps[steps.length - 1]?.status === "completed") {
-      // localStorage.removeItem(SETUP_PROGRESS_KEY); // Clear progress on successful completion
+      localStorage.removeItem(SETUP_PROGRESS_KEY); // Clear progress on successful completion
       console.log("Setting setup completed to true");
       localStorage.setItem(SETUP_COMPLETED_KEY, "true");
       localStorage.setItem(BUIDLGUIDL_DIRECTORY_KEY, DEFAULT_DIRECTORY);
@@ -335,7 +323,17 @@ export default function UbuntuSetup() {
                     </button>
                   </div>
                 )}
-
+                {!isRunning && currentStep !== -1 && !hasError && currentStep !== steps.length - 1 && (
+                  <button onClick={initiateSetup} className="btn btn-primary w-full">
+                    Continue Setup
+                  </button>
+                )}
+                {isRunning && (
+                  //loading spinner
+                  <div className="flex justify-center items-center">
+                    <span className="loading loading-spinner loading-lg"></span>
+                  </div>
+                )}
                 {!isRunning && !hasError && currentStep >= 0 && currentStep === steps.length - 1 && (
                   <div className="space-y-4">
                     <div className="alert alert-success bg-success/10 border border-success">

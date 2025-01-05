@@ -114,28 +114,28 @@ const Action = () => {
 
   return (
     <div>
-      <h2 className="text-xl font-bold mb-4 hidden md:block">Actions</h2>
+      <h2 className="text-xl font-bold mb-4 hidden xl:block">Actions</h2>
       <nav className="flex flex-col space-y-2">
         <button
           onClick={() => handleAction("update")}
           className="flex items-center space-x-2 p-2 rounded hover:bg-gray-700 transition-colors"
         >
           <FaSyncAlt className="text-lg" />
-          <span className="hidden md:block">Update</span>
+          <span className="hidden xl:block">Update</span>
         </button>
         <button
           onClick={() => handleAction("restart")}
           className="flex items-center space-x-2 p-2 rounded hover:bg-gray-700 transition-colors"
         >
           <FaRedo className="text-lg" />
-          <span className="hidden md:block">Restart</span>
+          <span className="hidden xl:block">Restart</span>
         </button>
         <button
           onClick={() => handleAction("shutdown")}
           className="flex items-center space-x-2 p-2 rounded hover:bg-gray-700 transition-colors"
         >
           <FaPowerOff className="text-lg" />
-          <span className="hidden md:block">Shutdown</span>
+          <span className="hidden xl:block">Shutdown</span>
         </button>
       </nav>
 

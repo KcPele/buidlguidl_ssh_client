@@ -18,7 +18,7 @@ const NewEpochAnalysis = React.memo(({ parsedLogs }: { parsedLogs: ParsedLog[] }
       .filter(entry => !Object.values(entry).some(val => isNaN(val)))
       .sort((a, b) => a.our_epoch - b.our_epoch); // Sort by epoch instead of timestamp
   }, [parsedLogs]);
-
+  console.log("epochData", epochData);
   if (epochData.length === 0) {
     return (
       <div className="card bg-base-100 shadow-xl">

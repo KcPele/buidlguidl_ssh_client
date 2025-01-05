@@ -126,7 +126,7 @@ export function LogViewer({ url, title }: { url: string; title: string }) {
           ))}
         </div>
       </div>
-      <ParsedLogView key={parsedLogs.length} parsedLogs={parsedLogs} />
+      <ParsedLogView parsedLogs={parsedLogs} />
     </div>
   );
 }

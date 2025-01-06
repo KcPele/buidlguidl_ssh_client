@@ -1,5 +1,6 @@
 import React, { useMemo } from "react";
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { CHART_MARGIN } from "~~/lib/helper";
 import { ParsedLog } from "~~/types/ssh/lighthouse";
 
 const ServiceDistribution = React.memo(({ parsedLogs }: { parsedLogs: ParsedLog[] }) => {
@@ -21,7 +22,7 @@ const ServiceDistribution = React.memo(({ parsedLogs }: { parsedLogs: ParsedLog[
         <h3 className="card-title">Service Distribution</h3>
         <div className="h-64">
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={serviceData}>
+            <BarChart data={serviceData} margin={CHART_MARGIN}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="name" />
               <YAxis />

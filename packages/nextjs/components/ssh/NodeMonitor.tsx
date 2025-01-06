@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { CHART_MARGIN } from "~~/lib/helper";
 
 interface SystemMetrics {
   timestamp: number;
@@ -87,7 +88,7 @@ export function NodeMonitor() {
           <h3 className="text-lg font-medium mb-4">CPU Usage</h3>
           <div className="w-full">
             <ResponsiveContainer width="100%" height={200}>
-              <LineChart data={metrics}>
+              <LineChart data={metrics} margin={CHART_MARGIN}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="timestamp" tickFormatter={timestamp => new Date(timestamp).toLocaleTimeString()} />
                 <YAxis />
@@ -102,7 +103,7 @@ export function NodeMonitor() {
           <h3 className="text-lg font-medium mb-4">Memory Usage</h3>
           <div className="w-full">
             <ResponsiveContainer width="100%" height={200}>
-              <LineChart data={metrics}>
+              <LineChart data={metrics} margin={CHART_MARGIN}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="timestamp" tickFormatter={timestamp => new Date(timestamp).toLocaleTimeString()} />
                 <YAxis />

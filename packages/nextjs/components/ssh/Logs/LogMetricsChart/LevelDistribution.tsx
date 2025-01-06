@@ -1,5 +1,6 @@
 import React, { useMemo } from "react";
 import { Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
+import { CHART_MARGIN } from "~~/lib/helper";
 import { ParsedLog } from "~~/types/ssh/lighthouse";
 
 const COLORS = ["#36A2EB", "#FF9F40", "#FF6384"];
@@ -26,7 +27,7 @@ const LevelDistribution = React.memo(({ parsedLogs }: { parsedLogs: ParsedLog[] 
         <h3 className="card-title">Log Level Distribution</h3>
         <div className="h-64">
           <ResponsiveContainer width="100%" height="100%">
-            <PieChart>
+            <PieChart margin={CHART_MARGIN}>
               <Pie
                 data={levelData}
                 dataKey="value"

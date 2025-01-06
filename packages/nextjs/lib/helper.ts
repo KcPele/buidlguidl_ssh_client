@@ -6,6 +6,7 @@ export const SETUP_COMPLETED_KEY = "buidlguidlSetupCompleted";
 export const SETUP_PROGRESS_KEY = "setupProgress";
 export const SSH_REMEMBER_ME_KEY = "ssh_remember_me";
 export const DEFAULT_DIRECTORY = "~/buidlguidl-client";
+export const CHART_MARGIN = { top: 15, right: 10, left: -18, bottom: 0 };
 
 export const executeCommand = async (
   command: string,

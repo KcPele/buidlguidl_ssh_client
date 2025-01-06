@@ -1,5 +1,6 @@
 import React, { useMemo } from "react";
 import { CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { CHART_MARGIN } from "~~/lib/helper";
 import { ParsedLog } from "~~/types/ssh/lighthouse";
 
 const parseTimestamp = (timestamp: string) => {
@@ -34,7 +35,7 @@ const NetworkHealthMetrics = React.memo(({ parsedLogs }: { parsedLogs: ParsedLog
       <h3 className="text-lg font-semibold mb-4">Network Health Metrics</h3>
       <div className="h-64">
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={networkHealthData.slice(0, 500)}>
+          <LineChart data={networkHealthData.slice(0, 500)} margin={CHART_MARGIN}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis
               dataKey="timestamp"

@@ -1,5 +1,6 @@
 import React, { useMemo } from "react";
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { CHART_MARGIN } from "~~/lib/helper";
 import { ParsedLog } from "~~/types/ssh/lighthouse";
 
 const ConnectedPeers = ({ parsedLogs }: { parsedLogs: ParsedLog[] }) => {
@@ -30,7 +31,7 @@ const ConnectedPeers = ({ parsedLogs }: { parsedLogs: ParsedLog[] }) => {
         <h3 className="card-title">Connected Peers</h3>
         <div className="h-64">
           <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={peerMetrics}>
+            <LineChart data={peerMetrics} margin={CHART_MARGIN}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis
                 dataKey="timestamp"

@@ -93,7 +93,10 @@ const ExistingModal = ({
       updateStepStatus(currentStep, { status: "running" });
       try {
         const startService = await executeCommand(steps[currentStep].command, directory, address);
-        if (startService.error) {
+        if (
+          startService.error &&
+          !startService.error.includes("[PM2][ERROR] Script already launched, add -f option to force re-execution")
+        ) {
           throw new Error(startService.error);
         }
         updateStepStatus(currentStep, { status: "completed", output: startService.output });

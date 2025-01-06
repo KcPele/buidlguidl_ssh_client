@@ -17,6 +17,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { CHART_MARGIN } from "~~/lib/helper";
 
 interface SystemMetrics {
   timestamp: number;
@@ -145,7 +146,7 @@ const SystemMonitor = () => {
           <div className="bg-white p-4 rounded-lg shadow-sm">
             <h3 className="text-lg font-medium mb-4">Disk Usage</h3>
             <ResponsiveContainer width="100%" height={200}>
-              <BarChart data={[data?.disk].filter(Boolean)}>
+              <BarChart data={[data?.disk].filter(Boolean)} margin={CHART_MARGIN}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="name" />
                 <YAxis />
@@ -159,7 +160,7 @@ const SystemMonitor = () => {
           <div className="bg-white p-4 rounded-lg shadow-sm">
             <h3 className="text-lg font-medium mb-4">System Temperatures</h3>
             <ResponsiveContainer width="100%" height={200}>
-              <LineChart data={metrics}>
+              <LineChart data={metrics} margin={CHART_MARGIN}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="timestamp" tickFormatter={ts => new Date(ts).toLocaleTimeString()} />
                 <YAxis unit="°C" />
@@ -180,7 +181,7 @@ const SystemMonitor = () => {
           <div className="bg-white p-4 rounded-lg shadow-sm">
             <h3 className="text-lg font-medium mb-4">Network Traffic</h3>
             <ResponsiveContainer width="100%" height={200}>
-              <AreaChart data={metrics}>
+              <AreaChart data={metrics} margin={CHART_MARGIN}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="timestamp" tickFormatter={ts => new Date(ts).toLocaleTimeString()} />
                 <YAxis tickFormatter={value => `${formatBytes(value)}/s`} />
@@ -197,7 +198,7 @@ const SystemMonitor = () => {
           <div className="bg-white p-4 rounded-lg shadow-sm">
             <h3 className="text-lg font-medium mb-4">System Load Average</h3>
             <ResponsiveContainer width="100%" height={200}>
-              <LineChart data={metrics}>
+              <LineChart data={metrics} margin={CHART_MARGIN}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="timestamp" tickFormatter={ts => new Date(ts).toLocaleTimeString()} />
                 <YAxis />
@@ -212,7 +213,7 @@ const SystemMonitor = () => {
           <div className="bg-white p-4 rounded-lg shadow-sm">
             <h3 className="text-lg font-medium mb-4">Process States</h3>
             <ResponsiveContainer width="100%" height={200}>
-              <AreaChart data={metrics}>
+              <AreaChart data={metrics} margin={CHART_MARGIN}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="timestamp" tickFormatter={ts => new Date(ts).toLocaleTimeString()} />
                 <YAxis />

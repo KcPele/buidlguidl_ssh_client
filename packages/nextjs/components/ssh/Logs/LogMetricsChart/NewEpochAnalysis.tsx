@@ -2,6 +2,7 @@ import React, { useMemo } from "react";
 import { parseTimestamp } from "./TimingMetrics";
 import { CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { ParsedLog } from "~~/types/ssh/lighthouse";
+import { CHART_MARGIN } from "~~/lib/helper";
 
 const NewEpochAnalysis = React.memo(({ parsedLogs }: { parsedLogs: ParsedLog[] }) => {
   const epochData = useMemo(() => {
@@ -39,7 +40,7 @@ const NewEpochAnalysis = React.memo(({ parsedLogs }: { parsedLogs: ParsedLog[] }
       <h3 className="text-lg font-semibold mb-4">Epoch Synchronization</h3>
       <div className="h-64">
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={epochData}>
+          <LineChart data={epochData} margin={CHART_MARGIN}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis
               dataKey="timestamp"

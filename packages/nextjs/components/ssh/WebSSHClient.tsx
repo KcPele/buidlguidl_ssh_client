@@ -50,7 +50,7 @@ const WebSSHClient = () => {
           ...prev,
           host: parsed.host || "",
           username: parsed.username || "",
-          port: parsed.port || "22",
+          port: parsed.port,
           // Don't load password
         }));
       } catch (e) {

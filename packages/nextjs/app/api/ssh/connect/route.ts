@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
       host,
       username,
       password,
-      port: port || 22,
+      port,
       lastAccessed: Date.now(),
     });
 
@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
       path: "/",
-      maxAge: 3600, // 1 hour
+      maxAge: 10200, // 2 hour
     });
 
     return apiResponse;

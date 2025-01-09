@@ -1,8 +1,8 @@
 import React, { useMemo } from "react";
 import { parseTimestamp } from "./TimingMetrics";
 import { CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import { ParsedLog } from "~~/types/ssh/lighthouse";
 import { CHART_MARGIN } from "~~/lib/helper";
+import { ParsedLog } from "~~/types/ssh/lighthouse";
 
 const NewEpochAnalysis = React.memo(({ parsedLogs }: { parsedLogs: ParsedLog[] }) => {
   const epochData = useMemo(() => {
@@ -19,7 +19,6 @@ const NewEpochAnalysis = React.memo(({ parsedLogs }: { parsedLogs: ParsedLog[] }
       .filter(entry => !Object.values(entry).some(val => isNaN(val)))
       .sort((a, b) => a.our_epoch - b.our_epoch); // Sort by epoch instead of timestamp
   }, [parsedLogs]);
-  console.log("epochData", epochData);
   if (epochData.length === 0) {
     return (
       <div className="card bg-base-100 shadow-xl">
@@ -36,7 +35,7 @@ const NewEpochAnalysis = React.memo(({ parsedLogs }: { parsedLogs: ParsedLog[] }
   };
 
   return (
-    <div className="w-full bg-white rounded-lg shadow p-6">
+    <div className="w-full bg-base-100 rounded-lg shadow p-6">
       <h3 className="text-lg font-semibold mb-4">Epoch Synchronization</h3>
       <div className="h-64">
         <ResponsiveContainer width="100%" height="100%">

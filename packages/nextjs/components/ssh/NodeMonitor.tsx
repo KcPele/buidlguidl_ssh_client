@@ -13,24 +13,24 @@ interface SystemMetrics {
 }
 
 const LoadingSkeleton = () => (
-  <div className="bg-white rounded-lg shadow-md p-6 animate-pulse">
+  <div className="bg-base-100 rounded-lg shadow-md p-6 animate-pulse">
     <div className="flex items-center justify-between mb-6">
-      <div className="h-7 w-48 bg-gray-200 rounded"></div>
+      <div className="h-7 w-48 bg-base-200 rounded"></div>
       <div className="flex items-center space-x-2">
-        <div className="w-3 h-3 rounded-full bg-gray-200"></div>
-        <div className="h-5 w-16 bg-gray-200 rounded"></div>
+        <div className="w-3 h-3 rounded-full bg-base-200"></div>
+        <div className="h-5 w-16 bg-base-200 rounded"></div>
       </div>
     </div>
 
     <div className="space-y-6 flex gap-3 flex-col md:flex-row md:items-end justify-center">
       <div className="flex-1 min-w-0">
-        <div className="h-6 w-24 bg-gray-200 rounded mb-4"></div>
-        <div className="w-full h-[200px] bg-gray-200 rounded"></div>
+        <div className="h-6 w-24 bg-base-200 rounded mb-4"></div>
+        <div className="w-full h-[200px] bg-base-200 rounded"></div>
       </div>
 
       <div className="flex-1 min-w-0">
-        <div className="h-6 w-32 bg-gray-200 rounded mb-4"></div>
-        <div className="w-full h-[200px] bg-gray-200 rounded"></div>
+        <div className="h-6 w-32 bg-base-200 rounded mb-4"></div>
+        <div className="w-full h-[200px] bg-base-200 rounded"></div>
       </div>
     </div>
   </div>
@@ -70,7 +70,7 @@ export function NodeMonitor() {
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6">
+    <div className="bg-base-100 rounded-lg shadow-md p-6">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-xl font-semibold">Node Status Monitor</h2>
         <div className="flex items-center space-x-2">

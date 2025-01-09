@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import StepDisplay from "./StepDisplay";
-import { useAccount } from "wagmi";
+import { useAccount, useEnsName } from "wagmi";
 import { BUIDLGUIDL_DIRECTORY_KEY, DEFAULT_DIRECTORY, SETUP_COMPLETED_KEY, executeCommand } from "~~/lib/helper";
 import { Step } from "~~/types/ssh/step";
 
@@ -18,7 +18,7 @@ const INITIAL_STEPS = [
   },
   {
     command: "cd $DIRECTORY && pm2 start index.js -- --owner $ADDRESS",
-    description: "Starting PM2 service",
+    description: "Starting Node with PM2 service",
     status: "pending",
   },
 ] as Step[];
@@ -38,6 +38,10 @@ const ExistingModal: React.FC<ExistingModalProps> = ({ isDirectoryModalOpen, set
 
   const router = useRouter();
   const { address } = useAccount();
+  const ens = useEnsName({
+    address,
+    blockTag: "latest",
+  });
 
   useEffect(() => {
     setState(prev => ({
@@ -72,7 +76,7 @@ const ExistingModal: React.FC<ExistingModalProps> = ({ isDirectoryModalOpen, set
 
   const handlePM2Service = async (currentStep: number) => {
     updateStep(currentStep, { status: "running" });
-    const startService = await executeCommand(state.steps[currentStep].command, state.directory, address);
+    const startService = await executeCommand(state.steps[currentStep].command, state.directory, ens.data || address);
     if (startService.error && !startService.error.includes("[PM2][ERROR] Script already launched")) {
       updateStep(currentStep, { status: "error", output: startService.error });
       throw new Error(startService.error);
@@ -140,7 +144,13 @@ const ExistingModal: React.FC<ExistingModalProps> = ({ isDirectoryModalOpen, set
               <button type="submit" className="btn btn-primary">
                 Continue
               </button>
-              <button type="button" className="btn btn-ghost" onClick={() => setIsDirectoryModalOpen(false)}>
+              <button
+                type="button"
+                className="btn btn-ghost"
+                onClick={() => {
+                  setIsDirectoryModalOpen(false);
+                }}
+              >
                 Cancel
               </button>
             </div>

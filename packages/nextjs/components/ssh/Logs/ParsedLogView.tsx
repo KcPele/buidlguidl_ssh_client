@@ -8,7 +8,7 @@ import TimingMetrics from "./LogMetricsChart/TimingMetrics";
 import { ParsedLog } from "~~/types/ssh/lighthouse";
 
 const ParsedLogView = memo(({ parsedLogs }: { parsedLogs: ParsedLog[] }) => (
-  <div className="bg-base-200">
+  <div className="bg-base-200 p-1 rounded-xl">
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       <LevelDistribution parsedLogs={parsedLogs} />
       <ServiceDistribution parsedLogs={parsedLogs} />

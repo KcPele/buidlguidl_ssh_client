@@ -12,18 +12,18 @@ interface Log {
 const LoadingSkeleton = () => (
   <div className="animate-pulse">
     <div className="flex items-center justify-between mb-4">
-      <div className="h-6 w-32 bg-gray-200 rounded"></div>
+      <div className="h-6 w-32 bg-base-300 rounded"></div>
       <div className="flex space-x-2">
         {[1, 2, 3, 4].map(i => (
-          <div key={i} className="h-8 w-16 bg-gray-200 rounded"></div>
+          <div key={i} className="h-8 w-16 bg-base-300 rounded"></div>
         ))}
       </div>
     </div>
-    <div className="h-[400px] bg-gray-50 rounded p-4">
+    <div className="h-[400px] bg-base-50 rounded p-4">
       {[...Array(8)].map((_, index) => (
         <div key={index} className="mb-2 flex items-center">
-          <div className="h-6 w-16 bg-gray-200 rounded mr-2"></div>
-          <div className="h-6 w-full bg-gray-200 rounded"></div>
+          <div className="h-6 w-16 bg-base-300 rounded mr-2"></div>
+          <div className="h-6 w-full bg-base-300 rounded"></div>
         </div>
       ))}
     </div>
@@ -75,16 +75,16 @@ export function LogViewer({ url, title }: { url: string; title: string }) {
 
   if (isLoading) {
     return (
-      <div className="bg-white rounded-lg shadow-md p-6 w-full">
+      <div className="bg-base-200 rounded-lg shadow-md p-6 w-full">
         <LoadingSkeleton />
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex bg-base-100 flex-col gap-4">
       {parsedLogs.length > 0 && <ParsedLogView parsedLogs={parsedLogs} />}
-      <div className="bg-white rounded-lg shadow-md p-6 w-full">
+      <div className=" bg-base-200 rounded-lg shadow-md p-6 w-full">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-semibold">{title}</h2>
           <div className="flex space-x-2">
@@ -93,7 +93,7 @@ export function LogViewer({ url, title }: { url: string; title: string }) {
                 key={f}
                 onClick={() => setFilter(f as typeof filter)}
                 className={`px-3 py-1 rounded transition-colors duration-200 ${
-                  filter === f ? "bg-indigo-100 text-indigo-800" : "bg-gray-100 hover:bg-gray-200"
+                  filter === f ? "bg-indigo-100 text-indigo-800" : "bg-base-100 hover:bg-base-200"
                 }`}
               >
                 {f.charAt(0).toUpperCase() + f.slice(1)}
@@ -106,7 +106,7 @@ export function LogViewer({ url, title }: { url: string; title: string }) {
 
         <div
           ref={logContainerRef}
-          className="h-[400px] overflow-y-auto overflow-x-hidden bg-gray-50 rounded p-4 font-mono text-sm"
+          className="h-[400px] overflow-y-auto overflow-x-hidden bg-base-100 rounded p-4 font-mono text-sm"
         >
           {filteredLogs.map((log, index) => (
             <div
@@ -116,7 +116,7 @@ export function LogViewer({ url, title }: { url: string; title: string }) {
                   ? "bg-red-50 text-red-800"
                   : log.level === "warn"
                     ? "bg-yellow-50 text-yellow-800"
-                    : "bg-blue-50 text-blue-800"
+                    : "bg-base-200 text-blue-800 dark:text-white/80"
               }`}
             >
               <span className="font-bold capitalize">{log.level}</span>

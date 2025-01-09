@@ -57,7 +57,7 @@ const MetricCard = ({
   icon: any;
   color: string;
 }) => (
-  <div className="bg-white rounded-lg p-4 shadow-sm">
+  <div className="bg-base-200 rounded-lg p-4 shadow-sm">
     <div className="flex items-center gap-3">
       <Icon className={`w-8 h-8 ${color}`} />
       <div>
@@ -143,7 +143,7 @@ const SystemMonitor = () => {
         </div>
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-          <div className="bg-white p-4 rounded-lg shadow-sm">
+          <div className="bg-base-200 p-4 rounded-lg shadow-sm">
             <h3 className="text-lg font-medium mb-4">Disk Usage</h3>
             <ResponsiveContainer width="100%" height={200}>
               <BarChart data={[data?.disk].filter(Boolean)} margin={CHART_MARGIN}>
@@ -157,7 +157,7 @@ const SystemMonitor = () => {
               </BarChart>
             </ResponsiveContainer>
           </div>
-          <div className="bg-white p-4 rounded-lg shadow-sm">
+          <div className="bg-base-200 p-4 rounded-lg shadow-sm">
             <h3 className="text-lg font-medium mb-4">System Temperatures</h3>
             <ResponsiveContainer width="100%" height={200}>
               <LineChart data={metrics} margin={CHART_MARGIN}>
@@ -178,7 +178,7 @@ const SystemMonitor = () => {
               </LineChart>
             </ResponsiveContainer>
           </div>
-          <div className="bg-white p-4 rounded-lg shadow-sm">
+          <div className="bg-base-200 p-4 rounded-lg shadow-sm">
             <h3 className="text-lg font-medium mb-4">Network Traffic</h3>
             <ResponsiveContainer width="100%" height={200}>
               <AreaChart data={metrics} margin={CHART_MARGIN}>
@@ -195,7 +195,7 @@ const SystemMonitor = () => {
               </AreaChart>
             </ResponsiveContainer>
           </div>
-          <div className="bg-white p-4 rounded-lg shadow-sm">
+          <div className="bg-base-200 p-4 rounded-lg shadow-sm">
             <h3 className="text-lg font-medium mb-4">System Load Average</h3>
             <ResponsiveContainer width="100%" height={200}>
               <LineChart data={metrics} margin={CHART_MARGIN}>
@@ -210,7 +210,7 @@ const SystemMonitor = () => {
               </LineChart>
             </ResponsiveContainer>
           </div>
-          <div className="bg-white p-4 rounded-lg shadow-sm">
+          <div className="bg-base-200 p-4 rounded-lg shadow-sm">
             <h3 className="text-lg font-medium mb-4">Process States</h3>
             <ResponsiveContainer width="100%" height={200}>
               <AreaChart data={metrics} margin={CHART_MARGIN}>

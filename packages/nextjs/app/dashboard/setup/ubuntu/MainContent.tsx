@@ -10,10 +10,10 @@ interface MainContentProps {
 
 export const MainContent = ({ activeSection }: MainContentProps) => {
   return (
-    <div className="flex-1 flex flex-col overflow-hidden">
+    <div className="flex-1 bg-base-100 flex flex-col overflow-hidden">
       <div className="flex-1 p-4 overflow-auto">
         <div className="h-full mx-auto">
-          <h1 className="text-3xl font-bold text-gray-800 mb-8 text-center">Linux Node Setup</h1>
+          <h1 className="text-3xl font-bold  mb-8 text-center">Linux Node Setup</h1>
           <div className="h-[calc(100%-6rem)]">
             {activeSection === "node-monitor" && <NodeMonitor />}
             {activeSection === "system-metrics" && <SystemMetrics />}

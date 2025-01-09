@@ -31,7 +31,7 @@ const NetworkHealthMetrics = React.memo(({ parsedLogs }: { parsedLogs: ParsedLog
   }, [parsedLogs]);
 
   return (
-    <div className="w-full bg-white rounded-lg shadow p-6">
+    <div className="w-full bg-base-100 rounded-lg shadow p-6">
       <h3 className="text-lg font-semibold mb-4">Network Health Metrics</h3>
       <div className="h-64">
         <ResponsiveContainer width="100%" height="100%">

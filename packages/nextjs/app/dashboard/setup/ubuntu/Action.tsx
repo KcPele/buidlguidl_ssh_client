@@ -2,7 +2,9 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import { Power } from "lucide-react";
 import { FaPowerOff, FaRedo, FaSyncAlt } from "react-icons/fa";
+import { useAccount, useEnsName } from "wagmi";
 import LoadingModal from "~~/components/ssh/ubuntu/LoadingModal";
 import { BUIDLGUIDL_DIRECTORY_KEY, SETUP_COMPLETED_KEY, SETUP_PROGRESS_KEY, executeCommand } from "~~/lib/helper";
 import { Step } from "~~/types/ssh/step";
@@ -41,11 +43,21 @@ const SHUTDOWN_STEPS: Step[] = [
   },
 ];
 
+const START_STEPS: Step[] = [
+  {
+    command: "cd $DIRECTORY && pm2 start index.js -- --owner $ADDRESS",
+    description: "Starting Node with PM2 service",
+    status: "pending",
+  },
+];
+
 const Action = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentSteps, setCurrentSteps] = useState<Step[]>([]);
   const [modalTitle, setModalTitle] = useState("");
   const [isCompleted, setIsCompleted] = useState(false);
+  const { address } = useAccount();
+  const ens = useEnsName({ address });
   const router = useRouter();
   const updateStepStatus = (index: number, updates: Partial<Step>) => {
     setCurrentSteps(currentSteps => currentSteps.map((step, i) => (i === index ? { ...step, ...updates } : step)));
@@ -60,7 +72,7 @@ const Action = () => {
       for (const step of steps) {
         updateStepStatus(currentStep, { status: "running" });
         try {
-          const result = await executeCommand(step.command, directory);
+          const result = await executeCommand(step.command, directory, ens.data || address);
           if (result.error) {
             throw new Error(result.error);
           }
@@ -84,7 +96,7 @@ const Action = () => {
     }
   };
 
-  const handleAction = (action: "update" | "restart" | "shutdown") => {
+  const handleAction = (action: "update" | "restart" | "start" | "shutdown") => {
     let steps: Step[];
     let title: string;
 
@@ -96,6 +108,11 @@ const Action = () => {
       case "restart":
         steps = [...RESTART_STEPS];
         title = "Restarting Services";
+        break;
+
+      case "start":
+        steps = [...START_STEPS];
+        title = "Starting Node";
         break;
       case "shutdown":
         steps = [...SHUTDOWN_STEPS];
@@ -134,10 +151,17 @@ const Action = () => {
           <span className="hidden xl:block">Restart</span>
         </button>
         <button
+          onClick={() => handleAction("start")}
+          className="flex items-center space-x-2 p-2 rounded hover:bg-gray-700 transition-colors"
+        >
+          <Power className="text-lg" />
+          <span className="hidden xl:block">Start</span>
+        </button>
+        <button
           onClick={() => handleAction("shutdown")}
           className="flex items-center space-x-2 p-2 rounded hover:bg-gray-700 transition-colors"
         >
-          <FaPowerOff className="text-lg" />
+          <FaPowerOff className="text-lg rotate-180" />
           <span className="hidden xl:block">Shutdown</span>
         </button>
       </nav>

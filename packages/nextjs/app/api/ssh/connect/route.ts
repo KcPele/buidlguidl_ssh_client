@@ -7,7 +7,14 @@ export async function POST(req: NextRequest) {
     const { host, username, password, port } = await req.json();
 
     if (!host || !username || !password) {
-      return NextResponse.json({ error: "Missing required connection parameters" }, { status: 400 });
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Connection failed",
+          message: "Missing required connection parameters",
+        },
+        { status: 400 },
+      );
     }
 
     const sessionId = await connectionManager.createConnection({

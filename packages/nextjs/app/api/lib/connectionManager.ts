@@ -14,7 +14,7 @@ class ConnectionManager {
   private connections: Map<string, Client>;
   private redis: Redis;
   private readonly REDIS_PREFIX = "ssh_session:";
-  private readonly SESSION_TTL = 3600; // 1 hour
+  private readonly SESSION_TTL = 10200; // 2 hour
 
   constructor() {
     this.connections = new Map();
